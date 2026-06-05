@@ -1,0 +1,87 @@
+.new-arrivals {
+  padding: 60px 40px;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.new-arrivals-label {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.new-arrivals-title {
+  font-size: 28px;
+  letter-spacing: 6px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.new-arrivals-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.new-arrival-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.new-arrival-card:hover {
+  transform: translateY(-5px);
+}
+
+.new-arrival-image-wrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  margin-bottom: 15px;
+}
+
+.new-arrival-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.new-arrival-card:hover .new-arrival-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.new-arrival-name {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.new-arrival-price {
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.new-arrivals-btn {
+  display: inline-block;
+  padding: 12px 40px;
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.new-arrivals-btn:hover {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}

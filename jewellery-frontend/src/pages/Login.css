@@ -1,0 +1,252 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background-color: #ffffff;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.logo-name {
+  font-size: 20px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.logo-sub {
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #aaaaaa;
+  margin-top: 2px;
+}
+
+.login-title {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.login-sub {
+  font-size: 12px;
+  color: #aaaaaa;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-bottom: 2rem;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888888;
+  margin-bottom: 6px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 0.5px solid #d0d0d0;
+  background-color: #ffffff;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #1a1a1a;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  border-radius: 0;
+}
+
+.field-input:focus {
+  border-color: #1a1a1a;
+}
+
+.field-input::placeholder {
+  color: #cccccc;
+}
+
+.field-input.error {
+  border-color: #c0392b;
+}
+
+.field-error {
+  font-size: 10px;
+  color: #c0392b;
+  letter-spacing: 0.5px;
+  margin-top: 5px;
+}
+
+.forgot {
+  text-align: right;
+  margin-top: -6px;
+  margin-bottom: 16px;
+}
+
+.forgot a {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #aaaaaa;
+  text-decoration: none;
+  border-bottom: 0.5px solid #d0d0d0;
+  padding-bottom: 1px;
+  transition: color 0.2s ease;
+}
+
+.forgot a:hover {
+  color: #1a1a1a;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: none;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #333333;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 0.5px;
+  background-color: #eeeeee;
+}
+
+.divider-text {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #aaaaaa;
+  text-transform: uppercase;
+}
+
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  border: 0.5px solid #d0d0d0;
+  background: transparent;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.google-btn:hover {
+  border-color: #1a1a1a;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 11px;
+  color: #aaaaaa;
+  letter-spacing: 0.5px;
+}
+
+.register-link a {
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 0.5px solid #1a1a1a;
+  padding-bottom: 1px;
+}
+
+/* Success screen */
+
+.login-success {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.success-box {
+  text-align: center;
+  max-width: 380px;
+}
+
+.success-icon {
+  font-size: 32px;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+}
+
+.success-title {
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.success-sub {
+  font-size: 13px;
+  color: #888888;
+  letter-spacing: 0.5px;
+  margin-bottom: 32px;
+  line-height: 1.8;
+}
+
+.success-btn {
+  display: inline-block;
+  padding: 13px 40px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.success-btn:hover {
+  background-color: #333333;
+}
+
+/* Responsive */
+
+@media (max-width: 480px) {
+  .login-container {
+    max-width: 100%;
+  }
+}
