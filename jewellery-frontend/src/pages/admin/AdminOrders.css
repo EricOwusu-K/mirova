@@ -1,0 +1,140 @@
+.admin-orders-header {
+  margin-bottom: 2rem;
+}
+
+.admin-success-msg {
+  padding: 12px 16px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 13px;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+}
+
+.admin-no-orders {
+  color: #aaaaaa;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.admin-order-card {
+  background: #ffffff;
+  border: 0.5px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.admin-order-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.admin-order-id {
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.admin-order-name {
+  font-size: 13px;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.admin-order-meta {
+  font-size: 12px;
+  color: #888888;
+}
+
+.admin-order-right {
+  text-align: right;
+}
+
+.admin-order-total {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.admin-order-date {
+  font-size: 11px;
+  color: #aaaaaa;
+  margin-top: 4px;
+}
+
+.admin-order-items {
+  border-top: 0.5px solid #f0f0f0;
+  padding-top: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-order-item {
+  font-size: 12px;
+  color: #888888;
+  margin-bottom: 4px;
+}
+
+.admin-order-status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-status-pill {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.admin-status-pill.pending {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.admin-status-pill.processing {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.admin-status-pill.shipped {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.admin-status-pill.delivered {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.admin-status-pill.cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.admin-status-select {
+  padding: 6px 12px;
+  border: 0.5px solid #d0d0d0;
+  font-size: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.admin-status-select:focus {
+  border-color: #1a1a1a;
+}
+
+.admin-updating-text {
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 1px;
+}

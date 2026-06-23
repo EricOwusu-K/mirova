@@ -1,0 +1,44 @@
+.admin-customers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-customers-count {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #888888;
+  text-transform: uppercase;
+}
+
+.admin-no-customers {
+  color: #aaaaaa;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.admin-customers-table-wrap {
+  background: #ffffff;
+  border: 0.5px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-role-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.admin-role-badge.admin {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.admin-role-badge.user {
+  background: #e3f2fd;
+  color: #1565c0;
+}

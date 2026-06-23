@@ -1,20 +1,65 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './ProductDetails.css'
-import { allProducts } from './Products'
+import { getProductById, addToCart, logInteraction } from '../api'
+import { useAuth } from '../context/AuthContext'
 
 function ProductDetails() {
-  const id = Number(window.location.pathname.split('/').pop())
-  const product = allProducts.find(p => p.id === id)
+  const { user } = useAuth()
+  const id = window.location.pathname.split('/').pop()
 
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [selectedSize, setSelectedSize] = useState('')
   const [quantity, setQuantity] = useState(1)
   const [activeImage, setActiveImage] = useState(0)
   const [wished, setWished] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
 
-  const handleAddToCart = () => {
-    setAddedToCart(true)
-    setTimeout(() => setAddedToCart(false), 2000)
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true)
+        const { data } = await getProductById(id)
+        setProduct(data)
+        if (data.sizes && data.sizes.length > 0) {
+          setSelectedSize(data.sizes[0])
+        }
+        // Log view interaction if user is logged in
+        if (user) {
+          await logInteraction(id, 'view')
+        }
+      } catch (error) {
+        console.error('Failed to fetch product:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProduct()
+  }, [id])
+
+  const handleAddToCart = async () => {
+    if (!user) {
+      window.location.href = '/login'
+      return
+    }
+    try {
+      await addToCart(product._id, quantity, selectedSize)
+      if (user) await logInteraction(product._id, 'cart')
+      setAddedToCart(true)
+      setTimeout(() => setAddedToCart(false), 2000)
+    } catch (error) {
+      console.error('Failed to add to cart:', error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="pd-page">
+        <div className="pd-container">
+          <p className="pd-not-found">Loading product...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!product) {
@@ -76,7 +121,7 @@ function ProductDetails() {
             )}
 
             <h1 className="pd-name">{product.name}</h1>
-            <p className="pd-variant">{product.variant}</p>
+            <p className="pd-variant">{product.material}</p>
             <p className="pd-price">${product.price.toFixed(2)}</p>
 
             <hr className="pd-divider" />
@@ -103,15 +148,9 @@ function ProductDetails() {
 
             <p className="pd-section-label">Quantity</p>
             <div className="pd-quantity">
-              <button
-                className="qty-btn"
-                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-              >−</button>
+              <button className="qty-btn" onClick={() => setQuantity(prev => Math.max(1, prev - 1))}>−</button>
               <span className="qty-num">{quantity}</span>
-              <button
-                className="qty-btn"
-                onClick={() => setQuantity(prev => prev + 1)}
-              >+</button>
+              <button className="qty-btn" onClick={() => setQuantity(prev => prev + 1)}>+</button>
             </div>
 
             <div className="pd-actions">

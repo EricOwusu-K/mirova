@@ -1,8 +1,11 @@
 import './Navbar.css'
 import { FaUser, FaShoppingCart } from 'react-icons/fa'
 import { FiSearch } from 'react-icons/fi'
+import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
+  const { user, logout } = useAuth()
+
   return (
     <nav>
       <div className="navbar-logo">
@@ -22,14 +25,30 @@ function Navbar() {
           <FiSearch className="search-icon" />
           <input type="text" placeholder="Search..." />
         </div>
-        <a href="/login" className="profile-icon">
-            <FaUser />
-            <span className="icon-tooltip">Login</span>
-        </a>
-        <a href="/register" className="create-account-btn">Create Account</a>
+        {user ? (
+          <>
+            <span style={{ fontSize: '12px', color: '#1a1a1a', letterSpacing: '1px' }}>
+              Hi, {user.name.split(' ')[0]}
+            </span>
+            <button
+              onClick={logout}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: '#888', letterSpacing: '1px' }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <a href="/login" className="profile-icon">
+              <FaUser />
+              <span className="icon-tooltip">Login</span>
+            </a>
+            <a href="/register" className="create-account-btn">Create Account</a>
+          </>
+        )}
         <a href="/cart" className="cart-icon">
-            <FaShoppingCart />
-            <span className="icon-tooltip">Shopping Cart</span>
+          <FaShoppingCart />
+          <span className="icon-tooltip">Shopping Cart</span>
         </a>
       </div>
     </nav>

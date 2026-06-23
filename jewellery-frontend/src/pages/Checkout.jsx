@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Checkout.css'
-
-const orderItems = [
-  { id: 1, name: 'Gold Chain Bracelet', variant: '18K Gold · Delicate', price: 120.00, quantity: 1 },
-  { id: 2, name: 'Pearl Drop Earrings', variant: 'Sterling Silver · Classic', price: 85.00, quantity: 2 },
-  { id: 3, name: 'Diamond Ring', variant: '14K White Gold · Fine', price: 340.00, quantity: 1 }
-]
+import { getCart, createOrder, clearCart } from '../api'
+import { useAuth } from '../context/AuthContext'
 
 function Checkout() {
-  const [paymentMethod, setPaymentMethod] = useState('card')
+  const { user } = useAuth()
+  const [cartItems, setCartItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [placing, setPlacing] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('Mobile Money')
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -17,24 +17,83 @@ function Checkout() {
     city: '',
     postalCode: '',
     country: '',
+    momoNumber: '',
+    momoNetwork: '',
     cardNumber: '',
     expiry: '',
     cvv: '',
-    momoNumber: '',
-    momoNetwork: ''
   })
   const [orderPlaced, setOrderPlaced] = useState(false)
+
+  useEffect(() => {
+    if (!user) {
+      window.location.href = '/login'
+      return
+    }
+    const fetchCart = async () => {
+      try {
+        const { data } = await getCart()
+        setCartItems(data)
+      } catch (error) {
+        console.error('Failed to fetch cart:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCart()
+  }, [user])
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   const tax = subtotal * 0.08
   const total = subtotal + tax
 
-  const handleSubmit = () => {
-    setOrderPlaced(true)
+  const handleSubmit = async () => {
+    if (cartItems.length === 0) return
+    try {
+      setPlacing(true)
+      const orderItems = cartItems.map(item => ({
+        product: item.product._id,
+        name: item.product.name,
+        image: item.product.images?.[0] || '',
+        price: item.product.price,
+        quantity: item.quantity,
+      }))
+
+      await createOrder({
+        orderItems,
+        shippingAddress: {
+          fullName: `${formData.firstName} ${formData.lastName}`,
+          address: formData.address,
+          city: formData.city,
+          phone: formData.momoNumber || 'N/A',
+        },
+        paymentMethod,
+        totalPrice: total,
+      })
+
+      await clearCart()
+      setOrderPlaced(true)
+    } catch (error) {
+      console.error('Failed to place order:', error)
+    } finally {
+      setPlacing(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="checkout-page">
+        <div className="checkout-container">
+          <p style={{ textAlign: 'center', padding: '60px', letterSpacing: '2px', color: '#aaa' }}>
+            Loading...
+          </p>
+        </div>
+      </div>
+    )
   }
 
   if (orderPlaced) {
@@ -77,128 +136,61 @@ function Checkout() {
 
           <div className="checkout-form">
 
-            {/* Contact */}
             <div className="form-section">
               <p className="form-section-title">Contact Information</p>
               <div className="field-full">
                 <label className="field-label">Email</label>
-                <input
-                  className="field-input"
-                  type="email"
-                  name="email"
-                  placeholder="your@email.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
+                <input className="field-input" type="email" name="email" placeholder="your@email.com" value={formData.email} onChange={handleChange} />
               </div>
             </div>
 
-            {/* Shipping */}
             <div className="form-section">
               <p className="form-section-title">Shipping Address</p>
               <div className="field-row">
                 <div>
                   <label className="field-label">First Name</label>
-                  <input
-                    className="field-input"
-                    type="text"
-                    name="firstName"
-                    placeholder="Jane"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                  />
+                  <input className="field-input" type="text" name="firstName" placeholder="Jane" value={formData.firstName} onChange={handleChange} />
                 </div>
                 <div>
                   <label className="field-label">Last Name</label>
-                  <input
-                    className="field-input"
-                    type="text"
-                    name="lastName"
-                    placeholder="Doe"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                  />
+                  <input className="field-input" type="text" name="lastName" placeholder="Doe" value={formData.lastName} onChange={handleChange} />
                 </div>
               </div>
               <div className="field-full">
                 <label className="field-label">Address</label>
-                <input
-                  className="field-input"
-                  type="text"
-                  name="address"
-                  placeholder="123 Main Street"
-                  value={formData.address}
-                  onChange={handleChange}
-                />
+                <input className="field-input" type="text" name="address" placeholder="123 Main Street" value={formData.address} onChange={handleChange} />
               </div>
               <div className="field-row">
                 <div>
                   <label className="field-label">City</label>
-                  <input
-                    className="field-input"
-                    type="text"
-                    name="city"
-                    placeholder="Kumasi"
-                    value={formData.city}
-                    onChange={handleChange}
-                  />
+                  <input className="field-input" type="text" name="city" placeholder="Kumasi" value={formData.city} onChange={handleChange} />
                 </div>
                 <div>
                   <label className="field-label">Postal Code</label>
-                  <input
-                    className="field-input"
-                    type="text"
-                    name="postalCode"
-                    placeholder="00233"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                  />
+                  <input className="field-input" type="text" name="postalCode" placeholder="00233" value={formData.postalCode} onChange={handleChange} />
                 </div>
               </div>
               <div className="field-full">
                 <label className="field-label">Country</label>
-                <input
-                  className="field-input"
-                  type="text"
-                  name="country"
-                  placeholder="Ghana"
-                  value={formData.country}
-                  onChange={handleChange}
-                />
+                <input className="field-input" type="text" name="country" placeholder="Ghana" value={formData.country} onChange={handleChange} />
               </div>
             </div>
 
-            {/* Payment */}
             <div className="form-section">
               <p className="form-section-title">Payment</p>
 
-              <div
-                className={`pay-option ${paymentMethod === 'card' ? 'active' : ''}`}
-                onClick={() => setPaymentMethod('card')}
-              >
-                <div className="pay-radio">
-                  {paymentMethod === 'card' && <div className="pay-radio-inner" />}
-                </div>
+              <div className={`pay-option ${paymentMethod === 'card' ? 'active' : ''}`} onClick={() => setPaymentMethod('card')}>
+                <div className="pay-radio">{paymentMethod === 'card' && <div className="pay-radio-inner" />}</div>
                 <span className="pay-label">Credit / Debit Card</span>
               </div>
 
-              <div
-                className={`pay-option ${paymentMethod === 'momo' ? 'active' : ''}`}
-                onClick={() => setPaymentMethod('momo')}
-              >
-                <div className="pay-radio">
-                  {paymentMethod === 'momo' && <div className="pay-radio-inner" />}
-                </div>
+              <div className={`pay-option ${paymentMethod === 'Mobile Money' ? 'active' : ''}`} onClick={() => setPaymentMethod('Mobile Money')}>
+                <div className="pay-radio">{paymentMethod === 'Mobile Money' && <div className="pay-radio-inner" />}</div>
                 <span className="pay-label">Mobile Money</span>
               </div>
 
-              <div
-                className={`pay-option ${paymentMethod === 'paypal' ? 'active' : ''}`}
-                onClick={() => setPaymentMethod('paypal')}
-              >
-                <div className="pay-radio">
-                  {paymentMethod === 'paypal' && <div className="pay-radio-inner" />}
-                </div>
+              <div className={`pay-option ${paymentMethod === 'PayPal' ? 'active' : ''}`} onClick={() => setPaymentMethod('PayPal')}>
+                <div className="pay-radio">{paymentMethod === 'PayPal' && <div className="pay-radio-inner" />}</div>
                 <span className="pay-label">PayPal</span>
               </div>
 
@@ -206,66 +198,30 @@ function Checkout() {
                 <div className="payment-fields">
                   <div className="field-full">
                     <label className="field-label">Card Number</label>
-                    <input
-                      className="field-input"
-                      type="text"
-                      name="cardNumber"
-                      placeholder="1234 5678 9012 3456"
-                      maxLength={19}
-                      value={formData.cardNumber}
-                      onChange={handleChange}
-                    />
+                    <input className="field-input" type="text" name="cardNumber" placeholder="1234 5678 9012 3456" maxLength={19} value={formData.cardNumber} onChange={handleChange} />
                   </div>
                   <div className="field-row">
                     <div>
                       <label className="field-label">Expiry Date</label>
-                      <input
-                        className="field-input"
-                        type="text"
-                        name="expiry"
-                        placeholder="MM/YY"
-                        maxLength={5}
-                        value={formData.expiry}
-                        onChange={handleChange}
-                      />
+                      <input className="field-input" type="text" name="expiry" placeholder="MM/YY" maxLength={5} value={formData.expiry} onChange={handleChange} />
                     </div>
                     <div>
                       <label className="field-label">CVV</label>
-                      <input
-                        className="field-input"
-                        type="text"
-                        name="cvv"
-                        placeholder="123"
-                        maxLength={3}
-                        value={formData.cvv}
-                        onChange={handleChange}
-                      />
+                      <input className="field-input" type="text" name="cvv" placeholder="123" maxLength={3} value={formData.cvv} onChange={handleChange} />
                     </div>
                   </div>
                 </div>
               )}
 
-              {paymentMethod === 'momo' && (
+              {paymentMethod === 'Mobile Money' && (
                 <div className="payment-fields">
                   <div className="field-full">
                     <label className="field-label">Mobile Number</label>
-                    <input
-                      className="field-input"
-                      type="text"
-                      name="momoNumber"
-                      placeholder="024 000 0000"
-                      value={formData.momoNumber}
-                      onChange={handleChange}
-                    />
+                    <input className="field-input" type="text" name="momoNumber" placeholder="024 000 0000" value={formData.momoNumber} onChange={handleChange} />
                   </div>
                   <div className="field-full">
                     <label className="field-label">Network</label>
-                    <select
-                      className="field-input"
-                      name="momoNetwork"
-                      value={formData.momoNetwork}
-                      onChange={handleChange}
-                    >
+                    <select className="field-input" name="momoNetwork" value={formData.momoNetwork} onChange={handleChange}>
                       <option value="">Select network</option>
                       <option value="mtn">MTN Mobile Money</option>
                       <option value="vodafone">Vodafone Cash</option>
@@ -275,7 +231,7 @@ function Checkout() {
                 </div>
               )}
 
-              {paymentMethod === 'paypal' && (
+              {paymentMethod === 'PayPal' && (
                 <div className="payment-fields">
                   <p className="paypal-note">You will be redirected to PayPal to complete your payment.</p>
                 </div>
@@ -284,21 +240,20 @@ function Checkout() {
 
           </div>
 
-          {/* Order Summary */}
           <div className="order-summary">
             <p className="form-section-title">Order Summary</p>
             <div className="summary-card">
-              {orderItems.map(item => (
-                <div className="summary-item" key={item.id}>
+              {cartItems.map(item => (
+                <div className="summary-item" key={item._id}>
                   <div className="summary-item-info">
                     <span className="summary-dot">✦</span>
                     <div>
-                      <p className="summary-item-name">{item.name}</p>
-                      <p className="summary-item-variant">{item.variant}</p>
+                      <p className="summary-item-name">{item.product.name}</p>
+                      <p className="summary-item-variant">{item.product.material} · {item.size}</p>
                     </div>
                   </div>
                   <span className="summary-item-price">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ${(item.product.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -323,8 +278,8 @@ function Checkout() {
                 <span>${total.toFixed(2)}</span>
               </div>
 
-              <button className="place-order-btn" onClick={handleSubmit}>
-                Place Order
+              <button className="place-order-btn" onClick={handleSubmit} disabled={placing}>
+                {placing ? 'Placing Order...' : 'Place Order'}
               </button>
 
               <div className="secure-note">
