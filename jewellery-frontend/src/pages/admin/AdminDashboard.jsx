@@ -15,7 +15,7 @@ function AdminDashboard() {
       try {
         const [productsRes, ordersRes] = await Promise.all([
           getProducts(),
-          fetch('http://localhost:5000/api/orders', {
+          fetch('https://mirova-backend.onrender.com/api/orders', {
             headers: { Authorization: `Bearer ${token}` }
           }).then(r => r.json())
         ])

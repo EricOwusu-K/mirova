@@ -55,7 +55,7 @@ function AdminProducts() {
     try {
       const formDataImg = new FormData()
       formDataImg.append('image', imageFile)
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const res = await fetch('https://mirova-backend.onrender.com/api/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formDataImg,
@@ -84,8 +84,8 @@ function AdminProducts() {
       }
 
       const url = editId
-        ? `http://localhost:5000/api/products/${editId}`
-        : 'http://localhost:5000/api/products'
+        ? `https://mirova-backend.onrender.com/api/products/${editId}`
+        : 'https://mirova-backend.onrender.com/api/products'
       const method = editId ? 'PUT' : 'POST'
 
       const res = await fetch(url, {
@@ -135,7 +135,7 @@ function AdminProducts() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return
     try {
-      await fetch(`http://localhost:5000/api/products/${id}`, {
+      await fetch(`https://mirova-backend.onrender.com/api/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       })
