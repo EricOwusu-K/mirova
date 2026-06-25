@@ -41,3 +41,9 @@ export const clearCart = () => API.delete('/cart')
 export const createOrder = (data) => API.post('/orders', data)
 export const getMyOrders = () => API.get('/orders/myorders')
 export const getOrderById = (id) => API.get(`/orders/${id}`)
+
+// NOTIFICATIONS
+export const getNotifications = () => API.get('/notifications')
+export const getUnreadCount = () => API.get('/notifications/count')
+export const markAsRead = (id) => API.put(`/notifications/${id}/read`)
+export const markAllAsRead = () => API.put('/notifications/read-all')

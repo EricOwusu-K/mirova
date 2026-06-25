@@ -260,3 +260,152 @@ nav {
 .create-account-btn:hover {
   background-color: #e55c00;
 }
+
+/* Notifications */
+.navbar-notif-wrap {
+  position: relative;
+}
+
+.navbar-notif-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.navbar-notif-panel {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: #ffffff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.notif-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+
+.notif-panel-title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  font-family: Georgia, serif;
+}
+
+.notif-mark-all {
+  font-size: 11px;
+  color: #888888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+.notif-mark-all:hover {
+  color: #1a1a1a;
+}
+
+.notif-empty {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 12px;
+  color: #aaaaaa;
+  font-family: Arial, sans-serif;
+}
+
+.notif-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-bottom: 0.5px solid #f8f8f8;
+  transition: background 0.2s ease;
+}
+
+.notif-item.unread {
+  background: #fafafa;
+}
+
+.notif-item:hover {
+  background: #f5f5f5;
+}
+
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.notif-dot.read {
+  background: transparent;
+  border: 0.5px solid #d0d0d0;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-title {
+  font-size: 12px;
+  color: #1a1a1a;
+  font-weight: 500;
+  margin-bottom: 3px;
+  font-family: Arial, sans-serif;
+}
+
+.notif-msg {
+  font-size: 11px;
+  color: #888888;
+  line-height: 1.5;
+  font-family: Arial, sans-serif;
+}
+
+.notif-time {
+  font-size: 10px;
+  color: #aaaaaa;
+  margin-top: 4px;
+  font-family: Arial, sans-serif;
+}
+
+.notif-view-all {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  font-size: 11px;
+  color: #1a1a1a;
+  letter-spacing: 2px;
+  border-top: 0.5px solid #f0f0f0;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s ease;
+}
+
+.notif-view-all:hover {
+  background: #f8f8f8;
+}
+
+.dropdown-notif-count {
+  background: #c0392b;
+  color: #ffffff;
+  font-size: 9px;
+  border-radius: 10px;
+  padding: 1px 6px;
+  margin-left: auto;
+  font-family: Arial, sans-serif;
+}

@@ -3,15 +3,18 @@ import './Navbar.css'
 import { FaUser, FaShoppingCart, FaBell, FaSignOutAlt, FaBoxOpen, FaUserEdit } from 'react-icons/fa'
 import { FiSearch } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
-import { getCart } from '../api'
+import { getCart, getNotifications, markAllAsRead } from '../api'
 
 function Navbar() {
   const { user, logout } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
+  const [notifications, setNotifications] = useState([])
   const dropdownRef = useRef(null)
 
-  // Fetch cart count
+  const unreadCount = notifications.filter(n => !n.isRead).length
+
   useEffect(() => {
     if (user) {
       const fetchCartCount = async () => {
@@ -22,17 +25,27 @@ function Navbar() {
           console.error('Failed to fetch cart count:', err)
         }
       }
+      const fetchNotifications = async () => {
+        try {
+          const { data } = await getNotifications()
+          setNotifications(data)
+        } catch (err) {
+          console.error('Failed to fetch notifications:', err)
+        }
+      }
       fetchCartCount()
+      fetchNotifications()
     } else {
       setCartCount(0)
+      setNotifications([])
     }
   }, [user])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false)
+        setNotifOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -42,6 +55,39 @@ function Navbar() {
   const handleLogout = () => {
     logout()
     window.location.href = '/'
+  }
+
+  const handleNotifOpen = async () => {
+    setNotifOpen(prev => !prev)
+    setDropdownOpen(false)
+  }
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllAsRead()
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })))
+    } catch (err) {
+      console.error('Failed to mark all as read:', err)
+    }
+  }
+
+  const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000)
+    if (seconds < 60) return 'just now'
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes}m ago`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours}h ago`
+    const days = Math.floor(hours / 24)
+    return `${days}d ago`
+  }
+
+  const statusClass = (msg) => {
+    if (msg.includes('shipped')) return 'notif-badge-shipped'
+    if (msg.includes('processing')) return 'notif-badge-processing'
+    if (msg.includes('delivered')) return 'notif-badge-delivered'
+    if (msg.includes('cancelled')) return 'notif-badge-cancelled'
+    return 'notif-badge-pending'
   }
 
   return (
@@ -73,9 +119,49 @@ function Navbar() {
             </a>
 
             <div className="navbar-profile-wrap" ref={dropdownRef}>
+
+              {/* Notifications panel */}
+              <div className="navbar-notif-wrap">
+                <button className="navbar-notif-btn" onClick={handleNotifOpen}>
+                  <FaBell className="navbar-icon" />
+                  {unreadCount > 0 && <span className="navbar-badge">{unreadCount}</span>}
+                </button>
+
+                {notifOpen && (
+                  <div className="navbar-notif-panel">
+                    <div className="notif-panel-header">
+                      <p className="notif-panel-title">Notifications</p>
+                      {unreadCount > 0 && (
+                        <button className="notif-mark-all" onClick={handleMarkAllRead}>
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    {notifications.length === 0 ? (
+                      <p className="notif-empty">No notifications yet</p>
+                    ) : (
+                      notifications.map(notif => (
+                        <div key={notif._id} className={`notif-item ${!notif.isRead ? 'unread' : ''}`}>
+                          <div className={`notif-dot ${notif.isRead ? 'read' : ''}`} />
+                          <div className="notif-content">
+                            <p className="notif-title">{notif.title}</p>
+                            <p className="notif-msg">{notif.message}</p>
+                            <p className="notif-time">{timeAgo(notif.createdAt)}</p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                    <a href="/orders" className="notif-view-all" onClick={() => setNotifOpen(false)}>
+                      View All Orders →
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Profile dropdown */}
               <button
                 className="navbar-profile-btn"
-                onClick={() => setDropdownOpen(prev => !prev)}
+                onClick={() => { setDropdownOpen(prev => !prev); setNotifOpen(false) }}
               >
                 <span className="navbar-hi">Hi, {user.name.split(' ')[0]}</span>
                 <FaUser className="navbar-icon" />
@@ -87,10 +173,14 @@ function Navbar() {
                     <p className="navbar-dropdown-name">{user.name}</p>
                     <p className="navbar-dropdown-email">{user.email}</p>
                   </div>
-                  <a href="/notifications" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                  <button
+                    className="navbar-dropdown-item"
+                    onClick={handleNotifOpen}
+                  >
                     <FaBell className="dropdown-item-icon" />
                     <span>Notifications</span>
-                  </a>
+                    {unreadCount > 0 && <span className="dropdown-notif-count">{unreadCount}</span>}
+                  </button>
                   <a href="/orders" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
                     <FaBoxOpen className="dropdown-item-icon" />
                     <span>My Orders</span>
