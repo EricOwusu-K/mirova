@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './Login.css'
 import { loginUser } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { MdErrorOutline } from 'react-icons/md'
 
 function Login() {
   const { login } = useAuth()
@@ -9,7 +10,6 @@ function Login() {
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [serverError, setServerError] = useState('')
-  const [success, setSuccess] = useState(false)
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -26,39 +26,26 @@ function Login() {
     return newErrors
   }
 
- const handleSubmit = async () => {
-  const newErrors = validate()
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors)
-    return
-  }
-  try {
-    setLoading(true)
-    const { data } = await loginUser(formData)
-    login(data)
-    if (data.role === 'admin') {
-      window.location.href = '/admin'
-    } else {
-      setSuccess(true)
+  const handleSubmit = async () => {
+    const newErrors = validate()
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
     }
-  } catch (error) {
-    setServerError(error.response?.data?.message || 'Login failed. Please try again.')
-  } finally {
-    setLoading(false)
-  }
-}
-
-  if (success) {
-    return (
-      <div className="login-success">
-        <div className="success-box">
-          <div className="success-icon">✦</div>
-          <p className="success-title">Welcome Back</p>
-          <p className="success-sub">You have signed in successfully.</p>
-          <a href="/" className="success-btn">Continue Shopping</a>
-        </div>
-      </div>
-    )
+    try {
+      setLoading(true)
+      const { data } = await loginUser(formData)
+      login(data)
+      if (data.role === 'admin') {
+        window.location.href = '/admin'
+      } else {
+        window.location.href = '/'
+      }
+    } catch (error) {
+      setServerError(error.response?.data?.message || 'Login failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -74,9 +61,12 @@ function Login() {
         <p className="login-sub">Sign in to your Mirova account</p>
 
         {serverError && (
-          <p className="field-error" style={{ textAlign: 'center', marginBottom: '12px' }}>
-            {serverError}
-          </p>
+          <div className="login-error-box">
+            <MdErrorOutline className="login-error-icon" />
+            <p className="login-error-text">
+              Sorry, we don't recognize that username or password. You can try again or reset your password.
+            </p>
+          </div>
         )}
 
         <div className="field">
