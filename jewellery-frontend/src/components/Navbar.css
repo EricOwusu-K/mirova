@@ -139,6 +139,29 @@ nav {
   white-space: nowrap;
 }
 
+/* Profile icon with notification count */
+.navbar-profile-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-notif-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #c0392b;
+  color: #ffffff;
+  font-size: 9px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+}
+
 /* Dropdown */
 .navbar-dropdown {
   position: absolute;
@@ -185,6 +208,11 @@ nav {
   transition: background 0.2s ease;
   width: 100%;
   text-align: left;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  cursor: pointer;
 }
 
 .navbar-dropdown-item:hover {
@@ -197,9 +225,6 @@ nav {
 }
 
 .navbar-dropdown-logout {
-  background: none;
-  border: none;
-  cursor: pointer;
   color: #c0392b;
   border-bottom: none;
 }
@@ -212,70 +237,17 @@ nav {
   color: #c0392b;
 }
 
-/* Logged out state */
-.profile-icon,
-.cart-icon {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 20px;
-  color: #1a1a1a;
-  text-decoration: none;
-}
-
-.icon-tooltip {
-  visibility: hidden;
-  opacity: 0;
-  background-color: #1a1a1a;
+.dropdown-notif-count {
+  background: #c0392b;
   color: #ffffff;
-  text-align: center;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  white-space: nowrap;
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: opacity 0.3s ease;
+  font-size: 9px;
+  border-radius: 10px;
+  padding: 1px 6px;
+  margin-left: auto;
+  font-family: Arial, sans-serif;
 }
 
-.profile-icon:hover .icon-tooltip,
-.cart-icon:hover .icon-tooltip {
-  visibility: visible;
-  opacity: 1;
-}
-
-.create-account-btn {
-  background-color: #ff6600;
-  color: #ffffff !important;
-  padding: 8px 18px;
-  border-radius: 25px;
-  font-size: 12px !important;
-  text-decoration: none;
-  letter-spacing: 1px;
-}
-
-.create-account-btn:hover {
-  background-color: #e55c00;
-}
-
-/* Notifications */
-.navbar-notif-wrap {
-  position: relative;
-}
-
-.navbar-notif-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 0;
-}
-
+/* Notifications panel */
 .navbar-notif-panel {
   position: absolute;
   top: 36px;
@@ -400,12 +372,51 @@ nav {
   background: #f8f8f8;
 }
 
-.dropdown-notif-count {
-  background: #c0392b;
+/* Logged out state */
+.profile-icon,
+.cart-icon {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.icon-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  background-color: #1a1a1a;
   color: #ffffff;
-  font-size: 9px;
-  border-radius: 10px;
-  padding: 1px 6px;
-  margin-left: auto;
-  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.3s ease;
+}
+
+.profile-icon:hover .icon-tooltip,
+.cart-icon:hover .icon-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.create-account-btn {
+  background-color: #ff6600;
+  color: #ffffff !important;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 12px !important;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.create-account-btn:hover {
+  background-color: #e55c00;
 }

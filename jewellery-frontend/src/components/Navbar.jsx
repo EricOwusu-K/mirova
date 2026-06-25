@@ -57,7 +57,7 @@ function Navbar() {
     window.location.href = '/'
   }
 
-  const handleNotifOpen = async () => {
+  const handleNotifOpen = () => {
     setNotifOpen(prev => !prev)
     setDropdownOpen(false)
   }
@@ -80,14 +80,6 @@ function Navbar() {
     if (hours < 24) return `${hours}h ago`
     const days = Math.floor(hours / 24)
     return `${days}d ago`
-  }
-
-  const statusClass = (msg) => {
-    if (msg.includes('shipped')) return 'notif-badge-shipped'
-    if (msg.includes('processing')) return 'notif-badge-processing'
-    if (msg.includes('delivered')) return 'notif-badge-delivered'
-    if (msg.includes('cancelled')) return 'notif-badge-cancelled'
-    return 'notif-badge-pending'
   }
 
   return (
@@ -120,66 +112,33 @@ function Navbar() {
 
             <div className="navbar-profile-wrap" ref={dropdownRef}>
 
-              {/* Notifications panel */}
-              <div className="navbar-notif-wrap">
-                <button className="navbar-notif-btn" onClick={handleNotifOpen}>
-                  <FaBell className="navbar-icon" />
-                  {unreadCount > 0 && <span className="navbar-badge">{unreadCount}</span>}
-                </button>
-
-                {notifOpen && (
-                  <div className="navbar-notif-panel">
-                    <div className="notif-panel-header">
-                      <p className="notif-panel-title">Notifications</p>
-                      {unreadCount > 0 && (
-                        <button className="notif-mark-all" onClick={handleMarkAllRead}>
-                          Mark all as read
-                        </button>
-                      )}
-                    </div>
-                    {notifications.length === 0 ? (
-                      <p className="notif-empty">No notifications yet</p>
-                    ) : (
-                      notifications.map(notif => (
-                        <div key={notif._id} className={`notif-item ${!notif.isRead ? 'unread' : ''}`}>
-                          <div className={`notif-dot ${notif.isRead ? 'read' : ''}`} />
-                          <div className="notif-content">
-                            <p className="notif-title">{notif.title}</p>
-                            <p className="notif-msg">{notif.message}</p>
-                            <p className="notif-time">{timeAgo(notif.createdAt)}</p>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                    <a href="/orders" className="notif-view-all" onClick={() => setNotifOpen(false)}>
-                      View All Orders →
-                    </a>
-                  </div>
-                )}
-              </div>
-
-              {/* Profile dropdown */}
+              {/* Profile button with notification count badge */}
               <button
                 className="navbar-profile-btn"
                 onClick={() => { setDropdownOpen(prev => !prev); setNotifOpen(false) }}
               >
                 <span className="navbar-hi">Hi, {user.name.split(' ')[0]}</span>
-                <FaUser className="navbar-icon" />
+                <div className="navbar-profile-icon-wrap">
+                  <FaUser className="navbar-icon" />
+                  {unreadCount > 0 && (
+                    <span className="navbar-notif-count">{unreadCount}</span>
+                  )}
+                </div>
               </button>
 
+              {/* Profile dropdown */}
               {dropdownOpen && (
                 <div className="navbar-dropdown">
                   <div className="navbar-dropdown-header">
                     <p className="navbar-dropdown-name">{user.name}</p>
                     <p className="navbar-dropdown-email">{user.email}</p>
                   </div>
-                  <button
-                    className="navbar-dropdown-item"
-                    onClick={handleNotifOpen}
-                  >
+                  <button className="navbar-dropdown-item" onClick={handleNotifOpen}>
                     <FaBell className="dropdown-item-icon" />
                     <span>Notifications</span>
-                    {unreadCount > 0 && <span className="dropdown-notif-count">{unreadCount}</span>}
+                    {unreadCount > 0 && (
+                      <span className="dropdown-notif-count">{unreadCount}</span>
+                    )}
                   </button>
                   <a href="/orders" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
                     <FaBoxOpen className="dropdown-item-icon" />
@@ -195,6 +154,38 @@ function Navbar() {
                   </button>
                 </div>
               )}
+
+              {/* Notifications panel */}
+              {notifOpen && (
+                <div className="navbar-notif-panel">
+                  <div className="notif-panel-header">
+                    <p className="notif-panel-title">Notifications</p>
+                    {unreadCount > 0 && (
+                      <button className="notif-mark-all" onClick={handleMarkAllRead}>
+                        Mark all as read
+                      </button>
+                    )}
+                  </div>
+                  {notifications.length === 0 ? (
+                    <p className="notif-empty">No notifications yet</p>
+                  ) : (
+                    notifications.map(notif => (
+                      <div key={notif._id} className={`notif-item ${!notif.isRead ? 'unread' : ''}`}>
+                        <div className={`notif-dot ${notif.isRead ? 'read' : ''}`} />
+                        <div className="notif-content">
+                          <p className="notif-title">{notif.title}</p>
+                          <p className="notif-msg">{notif.message}</p>
+                          <p className="notif-time">{timeAgo(notif.createdAt)}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  <a href="/orders" className="notif-view-all" onClick={() => setNotifOpen(false)}>
+                    View All Orders →
+                  </a>
+                </div>
+              )}
+
             </div>
           </>
         ) : (
