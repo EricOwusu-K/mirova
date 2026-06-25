@@ -9,6 +9,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import ProductDetails from './pages/ProductDetail'
 import VirtualTryOn from './pages/VirtualTryOn'
+import Orders from './pages/Orders'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminProducts from './pages/admin/AdminProducts'
 import AdminOrders from './pages/admin/AdminOrders'
@@ -41,6 +42,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/virtual-try-on" element={<VirtualTryOn />} />
+              <Route path="/orders" element={<Orders />} />
             </Routes>
             <Footer />
           </>

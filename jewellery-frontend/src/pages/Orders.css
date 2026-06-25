@@ -1,0 +1,173 @@
+.orders-page {
+  min-height: 80vh;
+  padding: 60px 20px;
+  background-color: #ffffff;
+}
+
+.orders-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.orders-loading {
+  text-align: center;
+  padding: 60px 0;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #aaaaaa;
+  text-transform: uppercase;
+}
+
+.orders-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.orders-title {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+}
+
+.orders-count {
+  font-size: 11px;
+  color: #aaaaaa;
+  letter-spacing: 2px;
+  font-family: Arial, sans-serif;
+}
+
+.orders-empty {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.orders-empty p {
+  font-size: 13px;
+  color: #aaaaaa;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.orders-shop-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  background: #1a1a1a;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: background 0.3s ease;
+}
+
+.orders-shop-btn:hover {
+  background: #333333;
+}
+
+.order-card {
+  border: 0.5px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.order-card:hover {
+  border-color: #1a1a1a;
+}
+
+.order-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.order-card-id {
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-family: Arial, sans-serif;
+}
+
+.order-card-date {
+  font-size: 11px;
+  color: #aaaaaa;
+  font-family: Arial, sans-serif;
+}
+
+.order-card-right {
+  text-align: right;
+}
+
+.order-card-total {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  font-family: Arial, sans-serif;
+}
+
+.order-card-payment {
+  font-size: 11px;
+  color: #aaaaaa;
+  font-family: Arial, sans-serif;
+  margin-top: 2px;
+}
+
+.order-card-items {
+  border-top: 0.5px solid #f0f0f0;
+  padding-top: 10px;
+  margin-bottom: 12px;
+}
+
+.order-card-item {
+  font-size: 12px;
+  color: #888888;
+  font-family: Arial, sans-serif;
+  line-height: 1.8;
+}
+
+.order-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-family: Arial, sans-serif;
+  text-transform: capitalize;
+}
+
+.status-pending { background: #fff8e1; color: #f57f17; }
+.status-processing { background: #e3f2fd; color: #1565c0; }
+.status-shipped { background: #f3e5f5; color: #6a1b9a; }
+.status-delivered { background: #e8f5e9; color: #2e7d32; }
+.status-cancelled { background: #ffebee; color: #c62828; }
+
+.order-view-btn {
+  font-size: 11px;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+  text-decoration: none;
+  border-bottom: 0.5px solid #1a1a1a;
+  font-family: Arial, sans-serif;
+  transition: color 0.2s ease;
+}
+
+.order-view-btn:hover {
+  color: #b8860b;
+  border-color: #b8860b;
+}
