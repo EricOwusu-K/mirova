@@ -85,6 +85,134 @@ nav {
   font-size: 14px;
 }
 
+/* Cart with badge */
+.navbar-cart-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.navbar-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-size: 9px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+}
+
+.navbar-icon {
+  font-size: 20px;
+  color: #1a1a1a;
+}
+
+/* Profile button */
+.navbar-profile-wrap {
+  position: relative;
+}
+
+.navbar-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.navbar-hi {
+  font-size: 12px;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+  font-family: 'Georgia', serif;
+  white-space: nowrap;
+}
+
+/* Dropdown */
+.navbar-dropdown {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: #ffffff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  min-width: 220px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.navbar-dropdown-header {
+  padding: 14px 16px;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+
+.navbar-dropdown-name {
+  font-size: 13px;
+  color: #1a1a1a;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+  margin-bottom: 3px;
+}
+
+.navbar-dropdown-email {
+  font-size: 11px;
+  color: #888;
+  font-family: Arial, sans-serif;
+}
+
+.navbar-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 0.5px solid #f8f8f8;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.navbar-dropdown-item:hover {
+  background: #f8f8f8;
+}
+
+.dropdown-item-icon {
+  font-size: 14px;
+  color: #888;
+}
+
+.navbar-dropdown-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #c0392b;
+  border-bottom: none;
+}
+
+.navbar-dropdown-logout:hover {
+  background: #fff5f5;
+}
+
+.navbar-dropdown-logout .dropdown-item-icon {
+  color: #c0392b;
+}
+
+/* Logged out state */
 .profile-icon,
 .cart-icon {
   position: relative;
