@@ -14,6 +14,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminProducts from './pages/admin/AdminProducts'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminCustomers from './pages/admin/AdminCustomers'
+import Help from './pages/Help'
 import { useAuth } from './context/AuthContext'
 
 function AdminRoute({ children }) {
@@ -43,6 +44,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/virtual-try-on" element={<VirtualTryOn />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/help" element={<Help />} />
             </Routes>
             <Footer />
           </>
