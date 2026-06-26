@@ -1,6 +1,6 @@
 import './AdminLayout.css'
 import { useAuth } from '../../context/AuthContext'
-import { MdDashboard, MdDiamond, MdShoppingBag, MdPeople, MdLogout } from 'react-icons/md'
+import { MdDashboard, MdDiamond, MdShoppingBag, MdPeople, MdLogout, MdHelp, MdMessage } from 'react-icons/md'
 
 const navItems = [
   { label: 'Dashboard', icon: <MdDashboard />, path: '/admin' },
