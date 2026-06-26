@@ -17,6 +17,8 @@ import AdminCustomers from './pages/admin/AdminCustomers'
 import Help from './pages/Help'
 import AdminHelpRequests from './pages/admin/AdminHelpRequests'
 import AdminMessages from './pages/admin/AdminMessages'
+import AdminOrderDetail from './pages/admin/AdminOrderDetail'
+import AdminCustomerDetail from './pages/admin/AdminCustomerDetail'
 import { useAuth } from './context/AuthContext'
 
 function AdminRoute({ children }) {
@@ -35,6 +37,8 @@ function App() {
         <Route path="/admin/customers" element={<AdminRoute><AdminCustomers /></AdminRoute>} />
         <Route path="/admin/help-requests" element={<AdminRoute><AdminHelpRequests /></AdminRoute>} />
         <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
+        <Route path="/admin/orders/:id" element={<AdminRoute><AdminOrderDetail /></AdminRoute>} />
+        <Route path="/admin/customers/:id" element={<AdminRoute><AdminCustomerDetail /></AdminRoute>} />
         <Route path="/*" element={
           <>
             <Navbar />

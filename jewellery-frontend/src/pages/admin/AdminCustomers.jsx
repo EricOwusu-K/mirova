@@ -53,6 +53,7 @@ function AdminCustomers() {
                 <th>Phone</th>
                 <th>Role</th>
                 <th>Joined</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -68,6 +69,11 @@ function AdminCustomers() {
                   </td>
                   <td className="admin-td-muted">
                     {new Date(customer.createdAt).toLocaleDateString()}
+                  </td>
+                  <td>
+                    <a href={`/admin/customers/${customer._id}`} className="admin-customer-view-link">
+                      View →
+                    </a>
                   </td>
                 </tr>
               ))}

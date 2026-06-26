@@ -106,6 +106,9 @@ function AdminOrders() {
               {updating === order._id && (
                 <span className="admin-updating-text">Updating...</span>
               )}
+              <a href={`/admin/orders/${order._id}`} className="admin-order-view-link">
+                View Details →
+              </a>
             </div>
 
           </div>
