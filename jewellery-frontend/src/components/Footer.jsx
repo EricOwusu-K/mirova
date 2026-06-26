@@ -13,9 +13,9 @@ function Footer() {
         <div className="footer-links">
           <h4>SHOP</h4>
           <ul>
-            <li><a href="/earrings">Earrings</a></li>
-            <li><a href="/necklaces">Necklaces</a></li>
-            <li><a href="/rings">Rings</a></li>
+            <li><a href="/products?category=Earrings">Earrings</a></li>
+            <li><a href="/products?category=Necklaces">Necklaces</a></li>
+            <li><a href="/products?category=Rings">Rings</a></li>
             <li><a href="/products">Best Sellers</a></li>
             <li><a href="/products">New Arrivals</a></li>
           </ul>
@@ -33,6 +33,13 @@ function Footer() {
           <ul>
             <li><a href="/login">Login</a></li>
             <li><a href="/register">Create Account</a></li>
+          </ul>
+        </div>
+        <div className="footer-links">
+          <h4>COMPANY</h4>
+          <ul>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/help">Help Center</a></li>
           </ul>
         </div>
         <div className="footer-social">

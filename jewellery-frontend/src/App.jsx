@@ -19,6 +19,7 @@ import AdminHelpRequests from './pages/admin/AdminHelpRequests'
 import AdminMessages from './pages/admin/AdminMessages'
 import AdminOrderDetail from './pages/admin/AdminOrderDetail'
 import AdminCustomerDetail from './pages/admin/AdminCustomerDetail'
+import About from './pages/About'
 import { useAuth } from './context/AuthContext'
 
 function AdminRoute({ children }) {
@@ -53,6 +54,7 @@ function App() {
               <Route path="/virtual-try-on" element={<VirtualTryOn />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/help" element={<Help />} />
+              <Route path="/about" element={<About />} />
             </Routes>
             <Footer />
           </>
