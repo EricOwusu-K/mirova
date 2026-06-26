@@ -190,13 +190,12 @@ function Help() {
         <div className="help-divider" />
 
         <p className="help-contact-title">Contact Us Directly</p>
-        <div className="help-contact-box">
-          <div>
+        <a href="mailto:support@mirova.com" className="help-contact-box">
+        <div>
             <p className="help-contact-text">Email Us</p>
             <p className="help-contact-sub">support@mirova.com · We reply within 24 hours</p>
-          </div>
         </div>
-
+        </a>
       </div>
     </div>
   )

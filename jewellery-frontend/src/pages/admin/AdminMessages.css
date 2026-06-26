@@ -1,0 +1,206 @@
+.admin-messages-header {
+  margin-bottom: 2rem;
+}
+
+.admin-msg-feedback {
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-msg-feedback.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.admin-msg-feedback.error {
+  background: #fdecea;
+  color: #c62828;
+}
+
+.admin-compose-card {
+  background: #ffffff;
+  border: 0.5px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-compose-title {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #888888;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  font-family: Arial, sans-serif;
+}
+
+.admin-compose-field {
+  margin-bottom: 14px;
+}
+
+.admin-compose-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888888;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-compose-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 0.5px solid #d0d0d0;
+  font-size: 13px;
+  color: #1a1a1a;
+  outline: none;
+  background: #2a2a2a;
+  color: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.admin-compose-select option {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+.admin-compose-select:focus {
+  border-color: #555555;
+}
+
+.admin-compose-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 0.5px solid #d0d0d0;
+  font-size: 13px;
+  color: #1a1a1a;
+  outline: none;
+  background: #ffffff;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.admin-compose-input:focus {
+  border-color: #1a1a1a;
+}
+
+.admin-compose-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 0.5px solid #d0d0d0;
+  font-size: 13px;
+  color: #1a1a1a;
+  outline: none;
+  background: #ffffff;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  height: 100px;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.admin-compose-textarea:focus {
+  border-color: #1a1a1a;
+}
+
+.admin-send-btn {
+  padding: 10px 28px;
+  background: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s ease;
+}
+
+.admin-send-btn:hover {
+  background: #444444;
+}
+
+.admin-send-btn:disabled {
+  background: #888888;
+  cursor: not-allowed;
+}
+
+.admin-sent-title {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #888888;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-no-messages {
+  color: #aaaaaa;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+}
+
+.admin-sent-card {
+  background: #ffffff;
+  border: 0.5px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.admin-sent-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.admin-sent-to {
+  font-size: 13px;
+  color: #1a1a1a;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+  margin-bottom: 2px;
+}
+
+.admin-sent-email {
+  font-size: 11px;
+  color: #888888;
+  font-family: Arial, sans-serif;
+}
+
+.admin-sent-date {
+  font-size: 11px;
+  color: #aaaaaa;
+  font-family: Arial, sans-serif;
+}
+
+.admin-sent-subject {
+  font-size: 13px;
+  color: #1a1a1a;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+  margin-bottom: 6px;
+}
+
+.admin-sent-msg {
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+  border-top: 0.5px solid #f0f0f0;
+  padding-top: 10px;
+}

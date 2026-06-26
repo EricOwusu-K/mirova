@@ -7,6 +7,8 @@ const navItems = [
   { label: 'Products', icon: <MdDiamond />, path: '/admin/products' },
   { label: 'Orders', icon: <MdShoppingBag />, path: '/admin/orders' },
   { label: 'Customers', icon: <MdPeople />, path: '/admin/customers' },
+  { label: 'Help Requests', icon: <MdHelp />, path: '/admin/help-requests' },
+  { label: 'Messages', icon: <MdMessage />, path: '/admin/messages' },
 ]
 
 function AdminLayout({ children, currentPage }) {

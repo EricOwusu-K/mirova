@@ -254,12 +254,18 @@
 }
 
 .help-contact-box {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 18px 22px;
   border: 0.5px solid #e8e8e8;
   background: #fafafa;
+  transition: border-color 0.2s ease;
+}
+
+.help-contact-box:hover {
+  border-color: #1a1a1a;
 }
 
 .help-contact-text {
