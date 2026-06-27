@@ -3,6 +3,22 @@ import './Checkout.css'
 import { getCart, createOrder, clearCart } from '../api'
 import { useAuth } from '../context/AuthContext'
 
+const countryData = {
+  Ghana: ['Ashanti Region', 'Greater Accra', 'Western Region', 'Eastern Region', 'Northern Region', 'Central Region', 'Volta Region', 'Upper East', 'Upper West', 'Bono Region'],
+  Nigeria: ['Lagos', 'Abuja (FCT)', 'Kano', 'Rivers', 'Oyo', 'Kaduna', 'Anambra', 'Enugu', 'Delta', 'Ogun'],
+  Kenya: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika', 'Malindi', 'Kitale', 'Garissa', 'Kakamega'],
+  'South Africa': ['Gauteng', 'Western Cape', 'KwaZulu-Natal', 'Eastern Cape', 'Limpopo', 'Mpumalanga', 'North West', 'Free State', 'Northern Cape'],
+  'United States': ['Alabama', 'Alaska', 'Arizona', 'California', 'Colorado', 'Florida', 'Georgia', 'Illinois', 'New York', 'Texas'],
+  'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
+  Canada: ['Ontario', 'Quebec', 'British Columbia', 'Alberta', 'Manitoba', 'Saskatchewan', 'Nova Scotia', 'New Brunswick'],
+  Australia: ['New South Wales', 'Victoria', 'Queensland', 'Western Australia', 'South Australia', 'Tasmania'],
+  Germany: ['Bavaria', 'Berlin', 'Hamburg', 'Hesse', 'North Rhine-Westphalia', 'Saxony', 'Baden-Württemberg'],
+  France: ['Île-de-France', 'Provence', 'Auvergne-Rhône-Alpes', 'Normandy', 'Brittany', 'Occitanie'],
+  Other: [],
+}
+
+const countries = Object.keys(countryData)
+
 function Checkout() {
   const { user } = useAuth()
   const [cartItems, setCartItems] = useState([])
@@ -15,14 +31,17 @@ function Checkout() {
     lastName: '',
     address: '',
     city: '',
+    region: '',
     postalCode: '',
     country: '',
+    phone: '',
     momoNumber: '',
     momoNetwork: '',
     cardNumber: '',
     expiry: '',
     cvv: '',
   })
+  const [errors, setErrors] = useState({})
   const [orderPlaced, setOrderPlaced] = useState(false)
 
   useEffect(() => {
@@ -44,7 +63,27 @@ function Checkout() {
   }, [user])
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'country' ? { region: '' } : {}),
+    }))
+    setErrors(prev => ({ ...prev, [name]: '' }))
+  }
+
+  const regions = formData.country ? (countryData[formData.country] || []) : []
+
+  const validate = () => {
+    const newErrors = {}
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required'
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required'
+    if (!formData.email.trim()) newErrors.email = 'Email is required'
+    if (!formData.country) newErrors.country = 'Please select a country'
+    if (!formData.address.trim()) newErrors.address = 'Address is required'
+    if (!formData.city.trim()) newErrors.city = 'City is required'
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required'
+    return newErrors
   }
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
@@ -53,6 +92,11 @@ function Checkout() {
 
   const handleSubmit = async () => {
     if (cartItems.length === 0) return
+    const newErrors = validate()
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
     try {
       setPlacing(true)
       const orderItems = cartItems.map(item => ({
@@ -67,9 +111,9 @@ function Checkout() {
         orderItems,
         shippingAddress: {
           fullName: `${formData.firstName} ${formData.lastName}`,
-          address: formData.address,
+          address: `${formData.address}${formData.region ? ', ' + formData.region : ''}, ${formData.country}`,
           city: formData.city,
-          phone: formData.momoNumber || 'N/A',
+          phone: formData.phone || formData.momoNumber || 'N/A',
         },
         paymentMethod,
         totalPrice: total,
@@ -140,40 +184,74 @@ function Checkout() {
               <p className="form-section-title">Contact Information</p>
               <div className="field-full">
                 <label className="field-label">Email</label>
-                <input className="field-input" type="email" name="email" placeholder="your@email.com" value={formData.email} onChange={handleChange} />
+                <input className={`field-input ${errors.email ? 'field-input-error' : ''}`} type="email" name="email" placeholder="your@email.com" value={formData.email} onChange={handleChange} />
+                {errors.email && <p className="checkout-field-error">{errors.email}</p>}
               </div>
             </div>
 
             <div className="form-section">
               <p className="form-section-title">Shipping Address</p>
+
               <div className="field-row">
                 <div>
                   <label className="field-label">First Name</label>
-                  <input className="field-input" type="text" name="firstName" placeholder="Jane" value={formData.firstName} onChange={handleChange} />
+                  <input className={`field-input ${errors.firstName ? 'field-input-error' : ''}`} type="text" name="firstName" placeholder="Jane" value={formData.firstName} onChange={handleChange} />
+                  {errors.firstName && <p className="checkout-field-error">{errors.firstName}</p>}
                 </div>
                 <div>
                   <label className="field-label">Last Name</label>
-                  <input className="field-input" type="text" name="lastName" placeholder="Doe" value={formData.lastName} onChange={handleChange} />
+                  <input className={`field-input ${errors.lastName ? 'field-input-error' : ''}`} type="text" name="lastName" placeholder="Doe" value={formData.lastName} onChange={handleChange} />
+                  {errors.lastName && <p className="checkout-field-error">{errors.lastName}</p>}
                 </div>
               </div>
+
               <div className="field-full">
-                <label className="field-label">Address</label>
-                <input className="field-input" type="text" name="address" placeholder="123 Main Street" value={formData.address} onChange={handleChange} />
+                <label className="field-label">Country</label>
+                <select className={`field-input ${errors.country ? 'field-input-error' : ''}`} name="country" value={formData.country} onChange={handleChange}>
+                  <option value="">Select your country</option>
+                  {countries.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                {errors.country && <p className="checkout-field-error">{errors.country}</p>}
               </div>
+
+              {formData.country && regions.length > 0 && (
+                <div className="field-full">
+                  <label className="field-label">Region / State</label>
+                  <select className="field-input" name="region" value={formData.region} onChange={handleChange}>
+                    <option value="">Select region / state</option>
+                    {regions.map(r => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="field-full">
+                <label className="field-label">Street Address</label>
+                <input className={`field-input ${errors.address ? 'field-input-error' : ''}`} type="text" name="address" placeholder="House number and street name" value={formData.address} onChange={handleChange} />
+                {errors.address && <p className="checkout-field-error">{errors.address}</p>}
+              </div>
+
               <div className="field-row">
                 <div>
                   <label className="field-label">City</label>
-                  <input className="field-input" type="text" name="city" placeholder="Kumasi" value={formData.city} onChange={handleChange} />
+                  <input className={`field-input ${errors.city ? 'field-input-error' : ''}`} type="text" name="city" placeholder="e.g. Kumasi" value={formData.city} onChange={handleChange} />
+                  {errors.city && <p className="checkout-field-error">{errors.city}</p>}
                 </div>
                 <div>
                   <label className="field-label">Postal Code</label>
-                  <input className="field-input" type="text" name="postalCode" placeholder="00233" value={formData.postalCode} onChange={handleChange} />
+                  <input className="field-input" type="text" name="postalCode" placeholder="Optional" value={formData.postalCode} onChange={handleChange} />
                 </div>
               </div>
+
               <div className="field-full">
-                <label className="field-label">Country</label>
-                <input className="field-input" type="text" name="country" placeholder="Ghana" value={formData.country} onChange={handleChange} />
+                <label className="field-label">Phone Number</label>
+                <input className={`field-input ${errors.phone ? 'field-input-error' : ''}`} type="text" name="phone" placeholder="e.g. 024 000 0000" value={formData.phone} onChange={handleChange} />
+                {errors.phone && <p className="checkout-field-error">{errors.phone}</p>}
               </div>
+
             </div>
 
             <div className="form-section">

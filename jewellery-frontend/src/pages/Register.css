@@ -244,6 +244,32 @@
   background-color: #333333;
 }
 
+.register-error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fdecea;
+  border: 1px solid #f5c6c3;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 1.2rem;
+}
+
+.register-error-icon {
+  font-size: 22px;
+  color: #e53935;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.register-error-text {
+  font-size: 13px;
+  color: #c62828;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+  font-family: Arial, sans-serif;
+}
+
 /* Responsive */
 
 @media (max-width: 480px) {

@@ -17,6 +17,7 @@ function AdminProducts() {
   const [editId, setEditId] = useState(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [formErrors, setFormErrors] = useState({})
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState('')
   const [uploadedImageUrl, setUploadedImageUrl] = useState('')
@@ -40,6 +41,7 @@ function AdminProducts() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
+    setFormErrors(prev => ({ ...prev, [name]: '' }))
   }
 
   const handleImageChange = (e) => {
@@ -71,7 +73,22 @@ function AdminProducts() {
     }
   }
 
+  const validate = () => {
+    const newErrors = {}
+    if (!formData.name.trim()) newErrors.name = 'Product name is required'
+    if (!formData.price || Number(formData.price) <= 0) newErrors.price = 'Valid price is required'
+    if (!formData.description.trim()) newErrors.description = 'Description is required'
+    if (!formData.stock && formData.stock !== 0) newErrors.stock = 'Stock is required'
+    return newErrors
+  }
+
   const handleSubmit = async () => {
+    const newErrors = validate()
+    if (Object.keys(newErrors).length > 0) {
+      setFormErrors(newErrors)
+      setMessage('')
+      return
+    }
     setSaving(true)
     try {
       const payload = {
@@ -102,6 +119,7 @@ function AdminProducts() {
         setImageFile(null)
         setImagePreview('')
         setUploadedImageUrl('')
+        setFormErrors({})
         fetchProducts()
         setTimeout(() => setMessage(''), 3000)
       }
@@ -128,6 +146,7 @@ function AdminProducts() {
     setEditId(product._id)
     setUploadedImageUrl(product.images?.[0] || '')
     setImagePreview(product.images?.[0] || '')
+    setFormErrors({})
     setShowForm(true)
     window.scrollTo(0, 0)
   }
@@ -152,6 +171,7 @@ function AdminProducts() {
     setImageFile(null)
     setImagePreview('')
     setUploadedImageUrl('')
+    setFormErrors({})
   }
 
   if (loading) {
@@ -178,14 +198,23 @@ function AdminProducts() {
         <div className="admin-form-card">
           <p className="admin-form-title">{editId ? 'EDIT PRODUCT' : 'ADD NEW PRODUCT'}</p>
 
+          {Object.keys(formErrors).length > 0 && (
+            <div className="admin-form-error-box">
+              <span className="admin-form-error-icon">!</span>
+              <p>Please fill in all required fields before saving.</p>
+            </div>
+          )}
+
           <div className="admin-form-grid">
             <div>
-              <label className="admin-field-label">Product Name</label>
-              <input className="admin-field-input" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Gold Chain Bracelet" />
+              <label className="admin-field-label">Product Name *</label>
+              <input className={`admin-field-input ${formErrors.name ? 'admin-input-error' : ''}`} name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Gold Chain Bracelet" />
+              {formErrors.name && <p className="admin-field-error">{formErrors.name}</p>}
             </div>
             <div>
-              <label className="admin-field-label">Price ($)</label>
-              <input className="admin-field-input" name="price" type="number" value={formData.price} onChange={handleChange} placeholder="e.g. 120" />
+              <label className="admin-field-label">Price ($) *</label>
+              <input className={`admin-field-input ${formErrors.price ? 'admin-input-error' : ''}`} name="price" type="number" value={formData.price} onChange={handleChange} placeholder="e.g. 120" />
+              {formErrors.price && <p className="admin-field-error">{formErrors.price}</p>}
             </div>
             <div>
               <label className="admin-field-label">Category</label>
@@ -202,8 +231,9 @@ function AdminProducts() {
               <input className="admin-field-input" name="material" value={formData.material} onChange={handleChange} placeholder="e.g. 18K Gold" />
             </div>
             <div>
-              <label className="admin-field-label">Stock</label>
-              <input className="admin-field-input" name="stock" type="number" value={formData.stock} onChange={handleChange} placeholder="e.g. 20" />
+              <label className="admin-field-label">Stock *</label>
+              <input className={`admin-field-input ${formErrors.stock ? 'admin-input-error' : ''}`} name="stock" type="number" value={formData.stock} onChange={handleChange} placeholder="e.g. 20" />
+              {formErrors.stock && <p className="admin-field-error">{formErrors.stock}</p>}
             </div>
             <div>
               <label className="admin-field-label">Badge (optional)</label>
@@ -223,8 +253,9 @@ function AdminProducts() {
           </div>
 
           <div>
-            <label className="admin-field-label">Description</label>
-            <textarea className="admin-field-textarea" name="description" value={formData.description} onChange={handleChange} placeholder="Product description..." />
+            <label className="admin-field-label">Description *</label>
+            <textarea className={`admin-field-textarea ${formErrors.description ? 'admin-input-error' : ''}`} name="description" value={formData.description} onChange={handleChange} placeholder="Product description..." />
+            {formErrors.description && <p className="admin-field-error">{formErrors.description}</p>}
           </div>
 
           <div>

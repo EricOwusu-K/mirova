@@ -352,6 +352,19 @@
   background-color: #333333;
 }
 
+.field-input-error {
+  border-color: #e53935 !important;
+  background: #fffafa;
+}
+
+.checkout-field-error {
+  font-size: 11px;
+  color: #e53935;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+  font-family: Arial, sans-serif;
+}
+
 /* Responsive */
 
 @media (max-width: 768px) {

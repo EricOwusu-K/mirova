@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './Register.css'
 import { registerUser } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { MdErrorOutline } from 'react-icons/md'
 
 function Register() {
   const { login } = useAuth()
@@ -43,25 +44,12 @@ function Register() {
       setLoading(true)
       const { data } = await registerUser(formData)
       login(data)
-      setSuccess(true)
+      window.location.href = '/'
     } catch (error) {
       setServerError(error.response?.data?.message || 'Registration failed. Please try again.')
     } finally {
       setLoading(false)
     }
-  }
-
-  if (success) {
-    return (
-      <div className="register-success">
-        <div className="success-box">
-          <div className="success-icon">✦</div>
-          <p className="success-title">Welcome to Mirova</p>
-          <p className="success-sub">Your account has been created, {formData.firstName}!</p>
-          <a href="/" className="success-btn">Start Shopping</a>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -77,9 +65,10 @@ function Register() {
         <p className="register-sub">Join Mirova and enjoy a personalised experience</p>
 
         {serverError && (
-          <p className="field-error" style={{ textAlign: 'center', marginBottom: '12px' }}>
-            {serverError}
-          </p>
+          <div className="register-error-box">
+            <MdErrorOutline className="register-error-icon" />
+            <p className="register-error-text">{serverError}</p>
+          </div>
         )}
 
         <div className="field-row">
