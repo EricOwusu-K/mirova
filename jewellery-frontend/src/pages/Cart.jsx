@@ -9,6 +9,7 @@ function Cart() {
   const [loading, setLoading] = useState(true)
   const [promoCode, setPromoCode] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
+  const [cartError, setCartError] = useState('')
 
   useEffect(() => {
     if (!user) {
@@ -46,6 +47,14 @@ function Cart() {
     } catch (error) {
       console.error('Failed to remove item:', error)
     }
+  }
+
+  const handleCheckout = () => {
+    if (items.length === 0) {
+      setCartError('Your cart is empty. Add items to cart first.')
+      return
+    }
+    window.location.href = '/checkout'
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
@@ -158,7 +167,16 @@ function Cart() {
               <span>${total.toFixed(2)}</span>
             </div>
 
-            <a href="/checkout" className="checkout-btn">Proceed to Checkout</a>
+            {cartError && (
+              <div className="cart-error-msg">
+                <span>!</span>
+                <p>{cartError}</p>
+              </div>
+            )}
+
+            <button className="checkout-btn" onClick={handleCheckout}>
+              Proceed to Checkout
+            </button>
 
             <div className="promo-section">
               <p className="promo-label">Promo Code</p>
