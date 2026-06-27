@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './Navbar.css'
 import { FaUser, FaShoppingCart, FaBell, FaSignOutAlt, FaBoxOpen, FaUserEdit } from 'react-icons/fa'
-import { FiSearch } from 'react-icons/fi'
+import { FiSearch, FiMenu, FiX } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { getCart, getNotifications, markAllAsRead } from '../api'
 
@@ -9,6 +9,7 @@ function Navbar() {
   const { user, logout } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
   const [notifications, setNotifications] = useState([])
   const dropdownRef = useRef(null)
@@ -83,126 +84,156 @@ function Navbar() {
   }
 
   return (
-    <nav>
-      <div className="navbar-logo">
-        <h1>MIROVA</h1>
-        <p>JEWELRY</p>
-      </div>
-
-      <ul className="navbar-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/products">All Products</a></li>
-        <li><a href="/virtual-try-on">Virtual Try On</a></li>
-        <li><a href="/recommended">Recommended For You</a></li>
-        <li><a href="/help">Help</a></li>
-      </ul>
-
-      <div className="navbar-actions">
-        <div className="search-bar">
-          <FiSearch className="search-icon" />
-          <input type="text" placeholder="Search..." />
+    <>
+      <nav>
+        <div className="navbar-logo">
+          <h1>MIROVA</h1>
+          <p>JEWELRY</p>
         </div>
 
-        {user ? (
-          <>
-            <a href="/cart" className="navbar-cart-wrap">
-              <FaShoppingCart className="navbar-icon" />
-              {cartCount > 0 && <span className="navbar-badge">{cartCount}</span>}
-            </a>
+        {/* Desktop links */}
+        <ul className="navbar-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/products">All Products</a></li>
+          <li><a href="/virtual-try-on">Virtual Try On</a></li>
+          <li><a href="/recommended">Recommended For You</a></li>
+          <li><a href="/help">Help</a></li>
+        </ul>
 
-            <div className="navbar-profile-wrap" ref={dropdownRef}>
+        <div className="navbar-actions">
+          <div className="search-bar">
+            <FiSearch className="search-icon" />
+            <input type="text" placeholder="Search..." />
+          </div>
 
-              {/* Profile button with notification count badge */}
-              <button
-                className="navbar-profile-btn"
-                onClick={() => { setDropdownOpen(prev => !prev); setNotifOpen(false) }}
-              >
-                <span className="navbar-hi">Hi, {user.name.split(' ')[0]}</span>
-                <div className="navbar-profile-icon-wrap">
-                  <FaUser className="navbar-icon" />
-                  {unreadCount > 0 && (
-                    <span className="navbar-notif-count">{unreadCount}</span>
-                  )}
-                </div>
-              </button>
+          {user ? (
+            <>
+              <a href="/cart" className="navbar-cart-wrap">
+                <FaShoppingCart className="navbar-icon" />
+                {cartCount > 0 && <span className="navbar-badge">{cartCount}</span>}
+              </a>
 
-              {/* Profile dropdown */}
-              {dropdownOpen && (
-                <div className="navbar-dropdown">
-                  <div className="navbar-dropdown-header">
-                    <p className="navbar-dropdown-name">{user.name}</p>
-                    <p className="navbar-dropdown-email">{user.email}</p>
-                  </div>
-                  <button className="navbar-dropdown-item" onClick={handleNotifOpen}>
-                    <FaBell className="dropdown-item-icon" />
-                    <span>Notifications</span>
+              <div className="navbar-profile-wrap" ref={dropdownRef}>
+                <button
+                  className="navbar-profile-btn"
+                  onClick={() => { setDropdownOpen(prev => !prev); setNotifOpen(false) }}
+                >
+                  <span className="navbar-hi">Hi, {user.name.split(' ')[0]}</span>
+                  <div className="navbar-profile-icon-wrap">
+                    <FaUser className="navbar-icon" />
                     {unreadCount > 0 && (
-                      <span className="dropdown-notif-count">{unreadCount}</span>
-                    )}
-                  </button>
-                  <a href="/orders" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    <FaBoxOpen className="dropdown-item-icon" />
-                    <span>My Orders</span>
-                  </a>
-                  <a href="/profile" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    <FaUserEdit className="dropdown-item-icon" />
-                    <span>Edit Profile</span>
-                  </a>
-                  <button className="navbar-dropdown-item navbar-dropdown-logout" onClick={handleLogout}>
-                    <FaSignOutAlt className="dropdown-item-icon" />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
-
-              {/* Notifications panel */}
-              {notifOpen && (
-                <div className="navbar-notif-panel">
-                  <div className="notif-panel-header">
-                    <p className="notif-panel-title">Notifications</p>
-                    {unreadCount > 0 && (
-                      <button className="notif-mark-all" onClick={handleMarkAllRead}>
-                        Mark all as read
-                      </button>
+                      <span className="navbar-notif-count">{unreadCount}</span>
                     )}
                   </div>
-                  {notifications.length === 0 ? (
-                    <p className="notif-empty">No notifications yet</p>
-                  ) : (
-                    notifications.map(notif => (
-                      <div key={notif._id} className={`notif-item ${!notif.isRead ? 'unread' : ''}`}>
-                        <div className={`notif-dot ${notif.isRead ? 'read' : ''}`} />
-                        <div className="notif-content">
-                          <p className="notif-title">{notif.title}</p>
-                          <p className="notif-msg">{notif.message}</p>
-                          <p className="notif-time">{timeAgo(notif.createdAt)}</p>
+                </button>
+
+                {dropdownOpen && (
+                  <div className="navbar-dropdown">
+                    <div className="navbar-dropdown-header">
+                      <p className="navbar-dropdown-name">{user.name}</p>
+                      <p className="navbar-dropdown-email">{user.email}</p>
+                    </div>
+                    <button className="navbar-dropdown-item" onClick={handleNotifOpen}>
+                      <FaBell className="dropdown-item-icon" />
+                      <span>Notifications</span>
+                      {unreadCount > 0 && (
+                        <span className="dropdown-notif-count">{unreadCount}</span>
+                      )}
+                    </button>
+                    <a href="/orders" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      <FaBoxOpen className="dropdown-item-icon" />
+                      <span>My Orders</span>
+                    </a>
+                    <a href="/profile" className="navbar-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      <FaUserEdit className="dropdown-item-icon" />
+                      <span>Edit Profile</span>
+                    </a>
+                    <button className="navbar-dropdown-item navbar-dropdown-logout" onClick={handleLogout}>
+                      <FaSignOutAlt className="dropdown-item-icon" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
+
+                {notifOpen && (
+                  <div className="navbar-notif-panel">
+                    <div className="notif-panel-header">
+                      <p className="notif-panel-title">Notifications</p>
+                      {unreadCount > 0 && (
+                        <button className="notif-mark-all" onClick={handleMarkAllRead}>
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    {notifications.length === 0 ? (
+                      <p className="notif-empty">No notifications yet</p>
+                    ) : (
+                      notifications.map(notif => (
+                        <div key={notif._id} className={`notif-item ${!notif.isRead ? 'unread' : ''}`}>
+                          <div className={`notif-dot ${notif.isRead ? 'read' : ''}`} />
+                          <div className="notif-content">
+                            <p className="notif-title">{notif.title}</p>
+                            <p className="notif-msg">{notif.message}</p>
+                            <p className="notif-time">{timeAgo(notif.createdAt)}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))
-                  )}
-                  <a href="/orders" className="notif-view-all" onClick={() => setNotifOpen(false)}>
-                    View All Orders →
-                  </a>
-                </div>
-              )}
+                      ))
+                    )}
+                    <a href="/orders" className="notif-view-all" onClick={() => setNotifOpen(false)}>
+                      View All Orders →
+                    </a>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <a href="/login" className="profile-icon">
+                <FaUser />
+                <span className="icon-tooltip">Login</span>
+              </a>
+              <a href="/register" className="create-account-btn">Create Account</a>
+              <a href="/cart" className="cart-icon">
+                <FaShoppingCart />
+                <span className="icon-tooltip">Shopping Cart</span>
+              </a>
+            </>
+          )}
 
-            </div>
-          </>
-        ) : (
-          <>
-            <a href="/login" className="profile-icon">
-              <FaUser />
-              <span className="icon-tooltip">Login</span>
-            </a>
-            <a href="/register" className="create-account-btn">Create Account</a>
-            <a href="/cart" className="cart-icon">
-              <FaShoppingCart />
-              <span className="icon-tooltip">Shopping Cart</span>
-            </a>
-          </>
-        )}
-      </div>
-    </nav>
+          {/* Hamburger button — mobile only */}
+          <button
+            className="navbar-hamburger"
+            onClick={() => setMobileMenuOpen(prev => !prev)}
+          >
+            {mobileMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu dropdown */}
+      {mobileMenuOpen && (
+        <div className="navbar-mobile-menu">
+          <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
+          <a href="/products" onClick={() => setMobileMenuOpen(false)}>All Products</a>
+          <a href="/virtual-try-on" onClick={() => setMobileMenuOpen(false)}>Virtual Try On</a>
+          <a href="/recommended" onClick={() => setMobileMenuOpen(false)}>Recommended For You</a>
+          <a href="/help" onClick={() => setMobileMenuOpen(false)}>Help</a>
+          {!user && (
+            <>
+              <a href="/login" onClick={() => setMobileMenuOpen(false)}>Login</a>
+              <a href="/register" onClick={() => setMobileMenuOpen(false)}>Create Account</a>
+            </>
+          )}
+          {user && (
+            <>
+              <a href="/orders" onClick={() => setMobileMenuOpen(false)}>My Orders</a>
+              <a href="/profile" onClick={() => setMobileMenuOpen(false)}>Edit Profile</a>
+              <button onClick={() => { handleLogout(); setMobileMenuOpen(false) }}>Logout</button>
+            </>
+          )}
+        </div>
+      )}
+    </>
   )
 }
 

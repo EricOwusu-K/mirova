@@ -420,3 +420,123 @@ nav {
 .create-account-btn:hover {
   background-color: #e55c00;
 }
+
+/* Hamburger button — hidden on desktop */
+.navbar-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1a1a1a;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile menu panel */
+.navbar-mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 57px;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-mobile-menu a,
+.navbar-mobile-menu button {
+  padding: 14px 20px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 0.5px solid #f0f0f0;
+  font-family: 'Georgia', serif;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.navbar-mobile-menu a:hover,
+.navbar-mobile-menu button:hover {
+  background: #f8f8f8;
+}
+
+.navbar-mobile-menu a:last-child,
+.navbar-mobile-menu button:last-child {
+  border-bottom: none;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  nav {
+    padding: 15px 24px;
+    gap: 16px;
+  }
+  .navbar-logo {
+    margin-right: 16px;
+  }
+  .navbar-links {
+    gap: 12px;
+  }
+  .navbar-links a {
+    font-size: 10px;
+  }
+  .search-bar input {
+    width: 80px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  nav {
+    padding: 14px 20px;
+    gap: 10px;
+  }
+  .navbar-links {
+    display: none;
+  }
+  .search-bar {
+    display: none;
+  }
+  .navbar-hi {
+    display: none;
+  }
+  .navbar-hamburger {
+    display: flex;
+  }
+  .navbar-mobile-menu {
+    display: flex;
+  }
+  .navbar-actions {
+    gap: 10px;
+  }
+  .navbar-dropdown {
+    right: -10px;
+  }
+  .navbar-notif-panel {
+    right: -10px;
+    width: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    padding: 12px 16px;
+  }
+  .navbar-logo h1 {
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
+  .navbar-notif-panel {
+    width: 240px;
+  }
+}
