@@ -85,3 +85,37 @@
   background-color: #1a1a1a;
   color: #ffffff;
 }
+
+@media (max-width: 1024px) {
+  .featured {
+    padding: 50px 24px;
+  }
+  .featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .featured {
+    padding: 40px 16px;
+  }
+  .featured-title {
+    font-size: 22px;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+  }
+  .featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+  .featured-title {
+    font-size: 18px;
+  }
+}

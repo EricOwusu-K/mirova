@@ -167,3 +167,48 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 1024px) {
+  .about-hero {
+    padding: 60px 24px;
+  }
+  .about-section {
+    padding: 50px 24px;
+  }
+  .about-values {
+    padding: 50px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 50px 20px;
+  }
+  .about-hero-title {
+    font-size: 24px;
+    letter-spacing: 4px;
+  }
+  .about-section {
+    padding: 40px 16px;
+  }
+  .about-values {
+    grid-template-columns: 1fr;
+    padding: 40px 16px;
+  }
+  .about-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .about-hero-title {
+    font-size: 20px;
+    letter-spacing: 3px;
+  }
+  .about-section-title {
+    font-size: 18px;
+  }
+  .about-team-grid {
+    grid-template-columns: 1fr;
+  }
+}

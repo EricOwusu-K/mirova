@@ -73,3 +73,49 @@
 .dot.active {
   background-color: #ffffff;
 }
+
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 32px;
+    max-width: 440px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 70vh;
+  }
+  .hero-content {
+    left: 5%;
+    right: 5%;
+  }
+  .hero-title {
+    font-size: 24px;
+    letter-spacing: 3px;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+  .hero-subtitle {
+    font-size: 11px;
+    letter-spacing: 3px;
+  }
+  .hero-btn {
+    font-size: 10px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 60vh;
+  }
+  .hero-title {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .hero-subtitle {
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+}

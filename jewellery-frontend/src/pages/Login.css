@@ -275,3 +275,24 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .login-page {
+    padding: 40px 20px;
+  }
+  .login-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 30px 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  .logo-name {
+    font-size: 16px;
+    letter-spacing: 6px;
+  }
+}

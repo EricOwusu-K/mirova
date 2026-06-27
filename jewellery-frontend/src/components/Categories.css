@@ -65,3 +65,37 @@
   background-color: rgba(0, 0, 0, 0.3);
   padding: 6px 20px;
 }
+
+@media (max-width: 1024px) {
+  .categories {
+    padding: 50px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .categories {
+    padding: 40px 16px;
+  }
+  .categories-title {
+    font-size: 22px;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+  }
+  .categories-grid {
+    gap: 12px;
+  }
+  .category-name {
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+  .categories-title {
+    font-size: 18px;
+  }
+}

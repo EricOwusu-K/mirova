@@ -369,3 +369,46 @@
     font-size: 16px;
   }
 }
+
+@media (max-width: 1024px) {
+  .pd-layout {
+    gap: 2.5rem;
+  }
+  .pd-name {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pd-page {
+    padding: 30px 16px;
+  }
+  .pd-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .pd-images {
+    position: static;
+    grid-template-columns: 55px 1fr;
+  }
+  .pd-name {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-images {
+    grid-template-columns: 48px 1fr;
+    gap: 10px;
+  }
+  .pd-thumb {
+    width: 48px;
+    height: 60px;
+  }
+  .pd-actions {
+    flex-wrap: wrap;
+  }
+  .btn-add {
+    flex: 1 1 100%;
+  }
+}

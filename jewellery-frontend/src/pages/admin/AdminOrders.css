@@ -154,3 +154,20 @@
   color: #b8860b;
   border-color: #b8860b;
 }
+
+@media (max-width: 768px) {
+  .admin-order-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .admin-order-right {
+    text-align: left;
+  }
+  .admin-order-status-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .admin-order-view-link {
+    margin-left: 0;
+  }
+}

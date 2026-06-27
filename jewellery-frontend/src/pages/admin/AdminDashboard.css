@@ -162,3 +162,29 @@
   background: #ffebee;
   color: #c62828;
 }
+
+@media (max-width: 1024px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+  .admin-stat-value {
+    font-size: 22px;
+  }
+  .admin-table-wrap {
+    overflow-x: auto;
+  }
+  .admin-table {
+    min-width: 500px;
+  }
+}

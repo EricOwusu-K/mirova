@@ -291,3 +291,36 @@
     padding: 20px;
   }
 }
+
+@media (max-width: 1024px) {
+  .help-page {
+    padding: 50px 24px;
+  }
+  .help-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .help-page {
+    padding: 30px 16px;
+  }
+  .help-title {
+    font-size: 20px;
+    letter-spacing: 4px;
+  }
+  .help-form {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .help-title {
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
+  .help-submit-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

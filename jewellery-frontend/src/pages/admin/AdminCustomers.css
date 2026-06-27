@@ -57,3 +57,14 @@
   color: #b8860b;
   border-color: #b8860b;
 }
+
+@media (max-width: 768px) {
+  .admin-customers-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .admin-customers-table-wrap {
+    overflow-x: auto;
+  }
+}

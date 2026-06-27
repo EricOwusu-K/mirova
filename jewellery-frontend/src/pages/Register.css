@@ -277,3 +277,27 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .register-page {
+    padding: 40px 20px;
+  }
+  .register-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-page {
+    padding: 30px 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+  .logo-name {
+    font-size: 16px;
+    letter-spacing: 6px;
+  }
+}
