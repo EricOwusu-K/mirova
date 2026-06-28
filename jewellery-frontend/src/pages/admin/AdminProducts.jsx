@@ -63,10 +63,16 @@ function AdminProducts() {
         body: formDataImg,
       })
       const data = await res.json()
-      setUploadedImageUrl(data.imageUrl)
-      setMessage('Image uploaded successfully!')
-      setTimeout(() => setMessage(''), 3000)
-    } catch (error) {
+      console.log('Upload response:', data)
+      if (data.imageUrl) {
+        setUploadedImageUrl(data.imageUrl)
+        setMessage('Image uploaded successfully!')
+        setTimeout(() => setMessage(''), 3000)
+      } else {
+        setMessage('Upload failed. Please try again.')
+        setTimeout(() => setMessage(''), 3000)
+   } 
+      }catch (error) {
       console.error('Failed to upload image:', error)
     } finally {
       setUploading(false)

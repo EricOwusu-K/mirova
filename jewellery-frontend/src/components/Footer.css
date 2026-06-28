@@ -121,6 +121,92 @@ footer {
   }
 }
 
+.footer-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.footer-modal {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.footer-modal-title {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  font-family: Georgia, serif;
+}
+
+.footer-modal-msg {
+  font-size: 13px;
+  color: #888888;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-modal-msg strong {
+  color: #1a1a1a;
+}
+
+.footer-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.footer-modal-yes {
+  padding: 10px 24px;
+  background: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  transition: background 0.2s ease;
+}
+
+.footer-modal-yes:hover {
+  background: #444444;
+}
+
+.footer-modal-no {
+  padding: 10px 24px;
+  background: transparent;
+  color: #1a1a1a;
+  border: 0.5px solid #d0d0d0;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.footer-modal-no:hover {
+  border-color: #1a1a1a;
+}
+
 @media (max-width: 480px) {
   .footer-top {
     grid-template-columns: 1fr;

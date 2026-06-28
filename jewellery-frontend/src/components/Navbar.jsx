@@ -12,6 +12,7 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
   const [notifications, setNotifications] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
   const dropdownRef = useRef(null)
 
   const unreadCount = notifications.filter(n => !n.isRead).length
@@ -72,6 +73,18 @@ function Navbar() {
     }
   }
 
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`
+    }
+  }
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
   const timeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000)
     if (seconds < 60) return 'just now'
@@ -91,7 +104,6 @@ function Navbar() {
           <p>JEWELRY</p>
         </div>
 
-        {/* Desktop links */}
         <ul className="navbar-links">
           <li><a href="/">Home</a></li>
           <li><a href="/products">All Products</a></li>
@@ -102,8 +114,14 @@ function Navbar() {
 
         <div className="navbar-actions">
           <div className="search-bar">
-            <FiSearch className="search-icon" />
-            <input type="text" placeholder="Search..." />
+            <FiSearch className="search-icon" onClick={handleSearch} style={{ cursor: 'pointer' }} />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+            />
           </div>
 
           {user ? (
@@ -200,7 +218,6 @@ function Navbar() {
             </>
           )}
 
-          {/* Hamburger button — mobile only */}
           <button
             className="navbar-hamburger"
             onClick={() => setMobileMenuOpen(prev => !prev)}
@@ -210,9 +227,19 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
         <div className="navbar-mobile-menu">
+          <div className="navbar-mobile-search">
+            <FiSearch size={16} />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+            />
+            <button onClick={handleSearch}>Go</button>
+          </div>
           <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
           <a href="/products" onClick={() => setMobileMenuOpen(false)}>All Products</a>
           <a href="/virtual-try-on" onClick={() => setMobileMenuOpen(false)}>Virtual Try On</a>

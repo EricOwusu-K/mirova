@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import './Products.css'
-import { getProducts } from '../api'
-import { addToCart } from '../api'
+import { getProducts, addToCart } from '../api'
 import { useAuth } from '../context/AuthContext'
 
 const categories = ['All', 'Bracelets', 'Earrings', 'Necklaces', 'Rings']
@@ -16,13 +15,15 @@ function Products() {
 
   const params = new URLSearchParams(window.location.search)
   const initialCategory = params.get('category') || 'All'
+  const initialSearch = params.get('search') || ''
+
   const [activeCategory, setActiveCategory] = useState(initialCategory)
   const [activePriceRange, setActivePriceRange] = useState('All')
   const [activeMaterial, setActiveMaterial] = useState('All')
   const [sortBy, setSortBy] = useState('Featured')
+  const [searchQuery, setSearchQuery] = useState(initialSearch)
   const [wishlist, setWishlist] = useState([])
 
-  // Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -63,6 +64,18 @@ function Products() {
 
   const filterProducts = () => {
     let filtered = [...allProducts]
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase()
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.material?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q)
+      )
+    }
+
     if (activeCategory !== 'All') filtered = filtered.filter(p => p.category === activeCategory)
     if (activePriceRange === 'Under $100') filtered = filtered.filter(p => p.price < 100)
     else if (activePriceRange === '$100 – $300') filtered = filtered.filter(p => p.price >= 100 && p.price <= 300)
@@ -71,6 +84,7 @@ function Products() {
     if (sortBy === 'Price: Low to High') filtered.sort((a, b) => a.price - b.price)
     else if (sortBy === 'Price: High to Low') filtered.sort((a, b) => b.price - a.price)
     else if (sortBy === 'Newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
     return filtered
   }
 
@@ -99,10 +113,27 @@ function Products() {
             >
               <span></span><span></span><span></span>
             </button>
-            <p className="products-title">All Products</p>
+            <p className="products-title">
+              {searchQuery.trim() ? `Results for "${searchQuery}"` : 'All Products'}
+            </p>
           </div>
           <span className="products-count">{products.length} items</span>
         </div>
+
+        {searchQuery.trim() && (
+          <div className="search-result-bar">
+            <p>Showing results for <strong>"{searchQuery}"</strong></p>
+            <button
+              className="search-clear-btn"
+              onClick={() => {
+                setSearchQuery('')
+                window.history.replaceState({}, '', '/products')
+              }}
+            >
+              ✕ Clear search
+            </button>
+          </div>
+        )}
 
         <div className={`products-layout ${sidebarOpen ? '' : 'collapsed'}`}>
 
@@ -154,7 +185,14 @@ function Products() {
             </div>
 
             {products.length === 0 ? (
-              <div className="no-products"><p>No products match your filters.</p></div>
+              <div className="no-products">
+                <p>
+                  {searchQuery.trim()
+                    ? `No products found for "${searchQuery}". Try a different search.`
+                    : 'No products match your filters.'
+                  }
+                </p>
+              </div>
             ) : (
               <div className="products-grid">
                 {products.map(product => (
