@@ -69,7 +69,6 @@
   font-size: 13px;
   color: #1a1a1a;
   outline: none;
-  margin-bottom: 12px;
   background: #ffffff;
   border-radius: 4px;
   transition: border-color 0.2s ease;
@@ -87,7 +86,6 @@
   font-size: 13px;
   color: #1a1a1a;
   outline: none;
-  margin-bottom: 12px;
   background: #ffffff;
   border-radius: 4px;
   height: 80px;
@@ -312,6 +310,7 @@
   font-size: 11px;
   color: #e53935;
   margin-top: 4px;
+  margin-bottom: 12px;
   letter-spacing: 0.3px;
   font-family: Arial, sans-serif;
 }

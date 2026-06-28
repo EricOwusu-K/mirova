@@ -18,6 +18,7 @@ function AdminProducts() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [formErrors, setFormErrors] = useState({})
+  const [submitted, setSubmitted] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState('')
   const [uploadedImageUrl, setUploadedImageUrl] = useState('')
@@ -38,10 +39,23 @@ function AdminProducts() {
 
   useEffect(() => { fetchProducts() }, [])
 
+  const validate = (data) => {
+    const newErrors = {}
+    if (!data.name.trim()) newErrors.name = 'Product name is required'
+    if (!data.price || Number(data.price) <= 0) newErrors.price = 'Valid price is required'
+    if (!data.description.trim()) newErrors.description = 'Description is required'
+    if (!data.stock && data.stock !== 0) newErrors.stock = 'Stock is required'
+    return newErrors
+  }
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
-    setFormErrors(prev => ({ ...prev, [name]: '' }))
+    const updated = { ...formData, [name]: type === 'checkbox' ? checked : value }
+    setFormData(updated)
+    // Only re-validate if user has already tried to submit
+    if (submitted) {
+      setFormErrors(validate(updated))
+    }
   }
 
   const handleImageChange = (e) => {
@@ -71,30 +85,22 @@ function AdminProducts() {
       } else {
         setMessage('Upload failed. Please try again.')
         setTimeout(() => setMessage(''), 3000)
-   } 
-      }catch (error) {
+      }
+    } catch (error) {
       console.error('Failed to upload image:', error)
     } finally {
       setUploading(false)
     }
   }
 
-  const validate = () => {
-    const newErrors = {}
-    if (!formData.name.trim()) newErrors.name = 'Product name is required'
-    if (!formData.price || Number(formData.price) <= 0) newErrors.price = 'Valid price is required'
-    if (!formData.description.trim()) newErrors.description = 'Description is required'
-    if (!formData.stock && formData.stock !== 0) newErrors.stock = 'Stock is required'
-    return newErrors
-  }
-
   const handleSubmit = async () => {
-    const newErrors = validate()
+    setSubmitted(true)
+    const newErrors = validate(formData)
     if (Object.keys(newErrors).length > 0) {
       setFormErrors(newErrors)
-      setMessage('')
       return
     }
+    setFormErrors({})
     setSaving(true)
     try {
       const payload = {
@@ -126,6 +132,7 @@ function AdminProducts() {
         setImagePreview('')
         setUploadedImageUrl('')
         setFormErrors({})
+        setSubmitted(false)
         fetchProducts()
         setTimeout(() => setMessage(''), 3000)
       }
@@ -153,6 +160,7 @@ function AdminProducts() {
     setUploadedImageUrl(product.images?.[0] || '')
     setImagePreview(product.images?.[0] || '')
     setFormErrors({})
+    setSubmitted(false)
     setShowForm(true)
     window.scrollTo(0, 0)
   }
@@ -178,6 +186,7 @@ function AdminProducts() {
     setImagePreview('')
     setUploadedImageUrl('')
     setFormErrors({})
+    setSubmitted(false)
   }
 
   if (loading) {
@@ -204,7 +213,7 @@ function AdminProducts() {
         <div className="admin-form-card">
           <p className="admin-form-title">{editId ? 'EDIT PRODUCT' : 'ADD NEW PRODUCT'}</p>
 
-          {Object.keys(formErrors).length > 0 && (
+          {submitted && Object.keys(formErrors).length > 0 && (
             <div className="admin-form-error-box">
               <span className="admin-form-error-icon">!</span>
               <p>Please fill in all required fields before saving.</p>
