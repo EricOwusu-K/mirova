@@ -4,25 +4,25 @@ const categories = [
   {
     id: 1,
     name: 'Necklaces',
-    image: '../assets/necklaces.jpg',
+    image: '../assets/necklaces.jpeg',
     link: '/products?category=Necklaces'
   },
   {
     id: 2,
     name: 'Bracelets',
-    image: '../assets/bracelets.jpg',
+    image: '../assets/bracelets.jpeg',
     link: '/products?category=Bracelets'
   },
   {
     id: 3,
     name: 'Rings',
-    image: '../assets/rings.jpg',
+    image: '../assets/rings.jpeg',
     link: '/products?category=Rings'
   },
   {
     id: 4,
     name: 'Earrings',
-    image: '../assets/earrings.jpg',
+    image: '../assets/earrings.jpeg',
     link: '/products?category=Earrings'
   }
 ]
