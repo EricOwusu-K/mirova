@@ -5,26 +5,10 @@ import rings from '../assets/rings.jpeg'
 import earrings from '../assets/earrings.jpeg'
 
 const categories = [
-  {
-    id: 1,
-    name: 'Necklaces',
-    link: '/products?category=Necklaces'
-  },
-  {
-    id: 2,
-    name: 'Bracelets',
-    link: '/products?category=Bracelets'
-  },
-  {
-    id: 3,
-    name: 'Rings',
-    link: '/products?category=Rings'
-  },
-  {
-    id: 4,
-    name: 'Earrings',
-    link: '/products?category=Earrings'
-  }
+  { id: 1, name: 'Necklaces', image: necklaces, link: '/products?category=Necklaces' },
+  { id: 2, name: 'Bracelets', image: bracelets, link: '/products?category=Bracelets' },
+  { id: 3, name: 'Rings',     image: rings,     link: '/products?category=Rings' },
+  { id: 4, name: 'Earrings',  image: earrings,  link: '/products?category=Earrings' },
 ]
 
 function Categories() {
