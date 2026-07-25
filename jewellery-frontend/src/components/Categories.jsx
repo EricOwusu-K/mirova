@@ -1,28 +1,28 @@
 import './Categories.css'
+import necklaces from '../assets/necklaces.jpeg'
+import bracelets from '../assets/bracelets.jpeg'
+import rings from '../assets/rings.jpeg'
+import earrings from '../assets/earrings.jpeg'
 
 const categories = [
   {
     id: 1,
     name: 'Necklaces',
-    image: '../assets/necklaces.jpeg',
     link: '/products?category=Necklaces'
   },
   {
     id: 2,
     name: 'Bracelets',
-    image: '../assets/bracelets.jpeg',
     link: '/products?category=Bracelets'
   },
   {
     id: 3,
     name: 'Rings',
-    image: '../assets/rings.jpeg',
     link: '/products?category=Rings'
   },
   {
     id: 4,
     name: 'Earrings',
-    image: '../assets/earrings.jpeg',
     link: '/products?category=Earrings'
   }
 ]
