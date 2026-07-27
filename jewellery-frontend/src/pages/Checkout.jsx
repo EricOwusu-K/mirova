@@ -19,6 +19,8 @@ const countryData = {
 
 const countries = Object.keys(countryData)
 
+const PAYSTACK_PUBLIC_KEY = 'pk_test_0f1f3a78d0cd4d48c87fd619951664ce4f46905a'
+
 function Checkout() {
   const { user } = useAuth()
   const [cartItems, setCartItems] = useState([])
@@ -90,15 +92,9 @@ function Checkout() {
   const tax = subtotal * 0.08
   const total = subtotal + tax
 
-  const handleSubmit = async () => {
-    if (cartItems.length === 0) return
-    const newErrors = validate()
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
+  // ── Called after Paystack confirms payment ──
+  const placeOrderAfterPayment = async (reference) => {
     try {
-      setPlacing(true)
       const orderItems = cartItems.map(item => ({
         product: item.product._id,
         name: item.product.name,
@@ -117,6 +113,8 @@ function Checkout() {
         },
         paymentMethod,
         totalPrice: total,
+        paymentReference: reference,
+        isPaid: true,
       })
 
       await clearCart()
@@ -125,6 +123,59 @@ function Checkout() {
       console.error('Failed to place order:', error)
     } finally {
       setPlacing(false)
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (cartItems.length === 0) return
+    const newErrors = validate()
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setPlacing(true)
+
+    // Load Paystack inline script dynamically
+    const script = document.createElement('script')
+    script.src = 'https://js.paystack.co/v1/inline.js'
+    document.body.appendChild(script)
+
+    script.onload = () => {
+      const handler = window.PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: formData.email,
+        amount: Math.round(total * 100), // Paystack uses pesewas (100 = GH₵1)
+        currency: 'GHS',
+        channels: paymentMethod === 'Mobile Money'
+          ? ['mobile_money']
+          : paymentMethod === 'card'
+          ? ['card']
+          : ['card', 'mobile_money'],
+        metadata: {
+          custom_fields: [
+            { display_name: 'Customer Name', variable_name: 'customer_name', value: `${formData.firstName} ${formData.lastName}` },
+            { display_name: 'Phone', variable_name: 'phone', value: formData.phone },
+          ]
+        },
+        // Mobile Money specific
+        ...(paymentMethod === 'Mobile Money' && formData.momoNumber && {
+          phone: formData.momoNumber,
+          mobile_money: {
+            phone: formData.momoNumber,
+            provider: formData.momoNetwork || 'mtn',
+          }
+        }),
+        callback: function(response) {
+          // Payment successful — now create the order
+          placeOrderAfterPayment(response.reference)
+        },
+        onClose: function() {
+          // Customer closed the popup without paying
+          setPlacing(false)
+        }
+      })
+      handler.openIframe()
     }
   }
 
@@ -274,20 +325,7 @@ function Checkout() {
 
               {paymentMethod === 'card' && (
                 <div className="payment-fields">
-                  <div className="field-full">
-                    <label className="field-label">Card Number</label>
-                    <input className="field-input" type="text" name="cardNumber" placeholder="1234 5678 9012 3456" maxLength={19} value={formData.cardNumber} onChange={handleChange} />
-                  </div>
-                  <div className="field-row">
-                    <div>
-                      <label className="field-label">Expiry Date</label>
-                      <input className="field-input" type="text" name="expiry" placeholder="MM/YY" maxLength={5} value={formData.expiry} onChange={handleChange} />
-                    </div>
-                    <div>
-                      <label className="field-label">CVV</label>
-                      <input className="field-input" type="text" name="cvv" placeholder="123" maxLength={3} value={formData.cvv} onChange={handleChange} />
-                    </div>
-                  </div>
+                  <p className="paypal-note">You will be redirected to Paystack to enter your card details securely.</p>
                 </div>
               )}
 
@@ -311,7 +349,7 @@ function Checkout() {
 
               {paymentMethod === 'PayPal' && (
                 <div className="payment-fields">
-                  <p className="paypal-note">You will be redirected to PayPal to complete your payment.</p>
+                  <p className="paypal-note">You will be redirected to Paystack to complete your payment.</p>
                 </div>
               )}
             </div>
@@ -357,12 +395,12 @@ function Checkout() {
               </div>
 
               <button className="place-order-btn" onClick={handleSubmit} disabled={placing}>
-                {placing ? 'Placing Order...' : 'Place Order'}
+                {placing ? 'Processing Payment...' : 'Place Order'}
               </button>
 
               <div className="secure-note">
                 <span className="lock-icon">🔒</span>
-                Secure &amp; Encrypted Checkout
+                Secure &amp; Encrypted Checkout via Paystack
               </div>
             </div>
           </div>
