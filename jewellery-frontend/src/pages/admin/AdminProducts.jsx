@@ -23,6 +23,7 @@ function AdminProducts() {
   const [imagePreview, setImagePreview] = useState('')
   const [uploadedImageUrl, setUploadedImageUrl] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   const token = JSON.parse(localStorage.getItem('mirovaUser'))?.token
 
@@ -52,7 +53,6 @@ function AdminProducts() {
     const { name, value, type, checked } = e.target
     const updated = { ...formData, [name]: type === 'checkbox' ? checked : value }
     setFormData(updated)
-    // Only re-validate if user has already tried to submit
     if (submitted) {
       setFormErrors(validate(updated))
     }
@@ -63,11 +63,14 @@ function AdminProducts() {
     if (!file) return
     setImageFile(file)
     setImagePreview(URL.createObjectURL(file))
+    setUploadedImageUrl('')
+    setUploadError('')
   }
 
   const handleImageUpload = async () => {
     if (!imageFile) return
     setUploading(true)
+    setUploadError('')
     try {
       const formDataImg = new FormData()
       formDataImg.append('image', imageFile)
@@ -77,17 +80,14 @@ function AdminProducts() {
         body: formDataImg,
       })
       const data = await res.json()
-      console.log('Upload response:', data)
       if (data.imageUrl) {
         setUploadedImageUrl(data.imageUrl)
-        setMessage('Image uploaded successfully!')
-        setTimeout(() => setMessage(''), 3000)
       } else {
-        setMessage('Upload failed. Please try again.')
-        setTimeout(() => setMessage(''), 3000)
+        setUploadError('Upload failed. Please try again.')
       }
     } catch (error) {
       console.error('Failed to upload image:', error)
+      setUploadError('Upload failed. Please try again.')
     } finally {
       setUploading(false)
     }
@@ -124,17 +124,18 @@ function AdminProducts() {
       })
 
       if (res.ok) {
-        setMessage(editId ? 'Product updated!' : 'Product added!')
+        setMessage(editId ? 'Product updated successfully!' : 'Product added successfully!')
         setShowForm(false)
         setFormData(emptyForm)
         setEditId(null)
         setImageFile(null)
         setImagePreview('')
         setUploadedImageUrl('')
+        setUploadError('')
         setFormErrors({})
         setSubmitted(false)
         fetchProducts()
-        setTimeout(() => setMessage(''), 3000)
+        setTimeout(() => setMessage(''), 4000)
       }
     } catch (error) {
       console.error('Failed to save product:', error)
@@ -159,6 +160,7 @@ function AdminProducts() {
     setEditId(product._id)
     setUploadedImageUrl(product.images?.[0] || '')
     setImagePreview(product.images?.[0] || '')
+    setUploadError('')
     setFormErrors({})
     setSubmitted(false)
     setShowForm(true)
@@ -185,6 +187,7 @@ function AdminProducts() {
     setImageFile(null)
     setImagePreview('')
     setUploadedImageUrl('')
+    setUploadError('')
     setFormErrors({})
     setSubmitted(false)
   }
@@ -207,6 +210,7 @@ function AdminProducts() {
         </button>
       </div>
 
+      {/* ── Top banner: only shows after product is added/updated ── */}
       {message && <div className="admin-success-msg">{message}</div>}
 
       {showForm && (
@@ -288,11 +292,16 @@ function AdminProducts() {
                 </button>
               )}
             </div>
+
             {imagePreview && (
               <div className="admin-image-preview-wrap">
                 <img src={imagePreview} alt="Preview" className="admin-image-preview" />
+                {/* ── Shows below image preview only ── */}
                 {uploadedImageUrl && (
-                  <p className="admin-image-success">✓ Image uploaded to cloud</p>
+                  <p className="admin-image-success">✓ Image uploaded successfully</p>
+                )}
+                {uploadError && (
+                  <p className="admin-field-error">{uploadError}</p>
                 )}
               </div>
             )}
