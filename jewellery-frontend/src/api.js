@@ -47,3 +47,6 @@ export const getNotifications = () => API.get('/notifications')
 export const getUnreadCount = () => API.get('/notifications/count')
 export const markAsRead = (id) => API.put(`/notifications/${id}/read`)
 export const markAllAsRead = () => API.put('/notifications/read-all')
+
+//RECOMMENDATION
+export const getRecommendations = () => API.get('/products/recommended')

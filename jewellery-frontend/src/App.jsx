@@ -20,6 +20,7 @@ import AdminMessages from './pages/admin/AdminMessages'
 import AdminOrderDetail from './pages/admin/AdminOrderDetail'
 import AdminCustomerDetail from './pages/admin/AdminCustomerDetail'
 import About from './pages/About'
+import Recommended from './pages/Recommended'
 import OrderDetail from './pages/OrderDetail'
 import Profile from './pages/Profile'
 import { useAuth } from './context/AuthContext'
@@ -54,6 +55,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/virtual-try-on" element={<VirtualTryOn />} />
+              <Route path="/recommended" element={<Recommended />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/profile" element={<Profile />} />
