@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './ProductDetails.css'
-import { getProductById, addToCart, logInteraction } from '../api'
+import { getProductById, addToCart, logInteraction, getWishlist, toggleWishlist } from '../api'
 import { useAuth } from '../context/AuthContext'
 
 function ProductDetails() {
@@ -24,9 +24,10 @@ function ProductDetails() {
         if (data.sizes && data.sizes.length > 0) {
           setSelectedSize(data.sizes[0])
         }
-        // Log view interaction if user is logged in
         if (user) {
           await logInteraction(id, 'view')
+          const { data: wl } = await getWishlist()
+          setWished(wl.some(p => p._id === id))
         }
       } catch (error) {
         console.error('Failed to fetch product:', error)
@@ -35,13 +36,10 @@ function ProductDetails() {
       }
     }
     fetchProduct()
-  }, [id])
+  }, [id, user])
 
   const handleAddToCart = async () => {
-    if (!user) {
-      window.location.href = '/login'
-      return
-    }
+    if (!user) { window.location.href = '/login'; return }
     try {
       await addToCart(product._id, quantity, selectedSize)
       if (user) await logInteraction(product._id, 'cart')
@@ -49,6 +47,18 @@ function ProductDetails() {
       setTimeout(() => setAddedToCart(false), 2000)
     } catch (error) {
       console.error('Failed to add to cart:', error)
+    }
+  }
+
+  const handleToggleWish = async () => {
+    if (!user) { window.location.href = '/login'; return }
+    const prev = wished
+    setWished(!prev)
+    try {
+      await toggleWishlist(product._id)
+    } catch (error) {
+      console.error('Failed to update wishlist:', error)
+      setWished(prev)
     }
   }
 
@@ -105,7 +115,6 @@ function ProductDetails() {
                 </div>
               ))}
             </div>
-
             <div className="pd-main-image">
               {images[activeImage]
                 ? <img src={images[activeImage]} alt={product.name} />
@@ -116,9 +125,7 @@ function ProductDetails() {
 
           <div className="pd-info">
 
-            {product.badge && (
-              <span className="pd-badge">{product.badge}</span>
-            )}
+            {product.badge && <span className="pd-badge">{product.badge}</span>}
 
             <h1 className="pd-name">{product.name}</h1>
             <p className="pd-variant">{product.material}</p>
@@ -163,7 +170,7 @@ function ProductDetails() {
               <a href="/virtual-try-on" className="btn-try">Try On</a>
               <button
                 className={`btn-wish ${wished ? 'wished' : ''}`}
-                onClick={() => setWished(prev => !prev)}
+                onClick={handleToggleWish}
                 aria-label="Add to wishlist"
               >
                 {wished ? '♥' : '♡'}

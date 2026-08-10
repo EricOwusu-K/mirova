@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './Products.css'
-import { getProducts, addToCart } from '../api'
+import { getProducts, addToCart, getWishlist, toggleWishlist } from '../api'
 import { useAuth } from '../context/AuthContext'
 
 const categories = ['All', 'Bracelets', 'Earrings', 'Necklaces', 'Rings']
@@ -37,14 +37,29 @@ function Products() {
       }
     }
     fetchProducts()
-  }, [])
 
-  const toggleWishlist = (id, e) => {
+    if (user) {
+      getWishlist()
+        .then(({ data }) => setWishlist(data.map(p => p._id)))
+        .catch(err => console.error('Failed to fetch wishlist:', err))
+    }
+  }, [user])
+
+  const handleToggleWishlist = async (id, e) => {
     e.preventDefault()
     e.stopPropagation()
-    setWishlist(prev =>
-      prev.includes(id) ? prev.filter(w => w !== id) : [...prev, id]
-    )
+    if (!user) {
+      window.location.href = '/login'
+      return
+    }
+    const wasWished = wishlist.includes(id)
+    setWishlist(prev => wasWished ? prev.filter(w => w !== id) : [...prev, id])
+    try {
+      await toggleWishlist(id)
+    } catch (error) {
+      console.error('Failed to update wishlist:', error)
+      setWishlist(prev => wasWished ? [...prev, id] : prev.filter(w => w !== id))
+    }
   }
 
   const handleAddToCart = async (e, product) => {
@@ -64,8 +79,6 @@ function Products() {
 
   const filterProducts = () => {
     let filtered = [...allProducts]
-
-    // Search filter
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase()
       filtered = filtered.filter(p =>
@@ -75,7 +88,6 @@ function Products() {
         p.description?.toLowerCase().includes(q)
       )
     }
-
     if (activeCategory !== 'All') filtered = filtered.filter(p => p.category === activeCategory)
     if (activePriceRange === 'Under $100') filtered = filtered.filter(p => p.price < 100)
     else if (activePriceRange === '$100 – $300') filtered = filtered.filter(p => p.price >= 100 && p.price <= 300)
@@ -84,7 +96,6 @@ function Products() {
     if (sortBy === 'Price: Low to High') filtered.sort((a, b) => a.price - b.price)
     else if (sortBy === 'Price: High to Low') filtered.sort((a, b) => b.price - a.price)
     else if (sortBy === 'Newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-
     return filtered
   }
 
@@ -136,7 +147,6 @@ function Products() {
         )}
 
         <div className={`products-layout ${sidebarOpen ? '' : 'collapsed'}`}>
-
           <div className={`products-sidebar ${sidebarOpen ? '' : 'hidden'}`}>
             <p className="filter-section-label">Category</p>
             {categories.map(cat => (
@@ -216,16 +226,17 @@ function Products() {
                       </a>
                       <button
                         className={`btn-wish ${wishlist.includes(product._id) ? 'wished' : ''}`}
-                        onClick={(e) => toggleWishlist(product._id, e)}
+                        onClick={(e) => handleToggleWishlist(product._id, e)}
                         aria-label="Add to wishlist"
-                      >♡</button>
+                      >
+                        {wishlist.includes(product._id) ? '♥' : '♡'}
+                      </button>
                     </div>
                   </a>
                 ))}
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>
