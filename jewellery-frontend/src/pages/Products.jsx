@@ -221,7 +221,7 @@ function Products() {
                       <button className="btn-cart" onClick={(e) => handleAddToCart(e, product)}>
                         Add to Cart
                       </button>
-                      <a href="/virtual-try-on" className="btn-tryon" onClick={e => e.stopPropagation()}>
+                      <a href={`/virtual-try-on?product=${product._id}`} className="btn-tryon" onClick={e => e.stopPropagation()}>
                         Try On
                       </a>
                       <button

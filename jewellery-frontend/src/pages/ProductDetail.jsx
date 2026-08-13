@@ -167,7 +167,7 @@ function ProductDetails() {
               >
                 {addedToCart ? '✓ Added' : 'Add to Cart'}
               </button>
-              <a href="/virtual-try-on" className="btn-try">Try On</a>
+              <a href={`/virtual-try-on?product=${product._id}`} className="btn-try">Try On</a>
               <button
                 className={`btn-wish ${wished ? 'wished' : ''}`}
                 onClick={handleToggleWish}

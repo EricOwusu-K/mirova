@@ -373,3 +373,193 @@
     font-size: 10px;
   }
 }
+
+/* ── Step cards ── */
+.vt-step-card {
+  background: #fff;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px;
+}
+.vt-step-active { 
+  border-color: #1a1a1a; 
+}
+.vt-step-locked { 
+  background: #f0f0f0; 
+  border-color: #ddd; 
+}
+
+.vt-step-head { 
+  display: flex; 
+  gap: 12px; 
+  align-items: 
+  flex-start; 
+  margin-bottom: 14px; 
+}
+
+.vt-step-num {
+  width: 28px; 
+  height: 28px; 
+  border-radius: 50%;
+  background: #1a1a1a; 
+  color: #fff;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 13px; 
+  font-weight: bold; 
+  flex-shrink: 0;
+  font-family: Arial, sans-serif;
+}
+
+.vt-step-num.locked { 
+  background: #bbb; 
+}
+
+.vt-step-title { 
+  font-size: 14px; 
+  font-weight: bold; 
+  color: #1a1a1a; 
+  font-family: Arial, sans-serif; 
+}
+
+.vt-step-title.locked-text { 
+  color: #aaa; 
+}
+
+.vt-step-desc { 
+  font-size: 11px; 
+  color: #888; 
+  font-family: Arial, sans-serif; 
+  margin-top: 2px; 
+}
+
+/* ── Confirmed green bar ── */
+.vt-step-confirmed {
+  display: flex; 
+  align-items: center; 
+  gap: 12px;
+  border-color: #2e7d32; 
+  background: #fff;
+}
+
+.vt-confirm-check {
+  width: 28px; 
+  height: 28px; 
+  border-radius: 50%;
+  background: #2e7d32; 
+  color: #fff;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 14px; 
+  flex-shrink: 0;
+}
+
+.vt-confirm-info { 
+  flex: 1; 
+}
+
+.vt-confirm-title { 
+  font-size: 13px; 
+  font-weight: bold; 
+  color: #1a1a1a; 
+  font-family: Arial, sans-serif; 
+}
+
+.vt-confirm-sub { 
+  font-size: 11px; 
+  color: #2e7d32; 
+  font-family: Arial, sans-serif; 
+  margin-top: 2px; 
+}
+
+.vt-change-btn { 
+  color: #1a1a1a; 
+  text-decoration: underline; 
+  cursor: pointer; 
+}
+
+.vt-confirm-thumb { 
+  width: 44px; 
+  height: 44px; 
+  border-radius: 4px; 
+  object-fit: cover; 
+  border: 1px solid #ccc; 
+}
+
+/* ── Locked viewer ── */
+.vt-viewer-locked { 
+  opacity: 0.5; 
+  pointer-events: none; 
+}
+
+/* ── Detection feedback ── */
+.vt-detect { 
+  margin-top: 12px; 
+  padding: 12px 14px; 
+  border-radius: 8px; 
+  font-family: Arial, sans-serif; 
+}
+
+.vt-detect-checking { 
+  background: #f5f0eb; 
+  color: #888; 
+  font-size: 12px; 
+}
+
+.vt-detect-met { 
+  background: #e8f5e9; 
+  border: 1px solid #2e7d32;
+ }
+
+.vt-detect-failed { 
+  background: #fdecea; 
+  border: 1px solid #c62828; 
+}
+
+.vt-detect-title { 
+  font-size: 13px; 
+  font-weight: bold; 
+}
+
+.vt-detect-met .vt-detect-title {
+   color: #2e7d32;
+}
+
+.vt-detect-failed .vt-detect-title { 
+  color: #c62828;
+}
+
+.vt-detect-sub { 
+font-size: 10px; 
+margin-top: 4px; 
+}
+
+.vt-detect-met .vt-detect-sub { 
+color: #2e7d32; 
+}
+
+.vt-detect-failed .vt-detect-sub { 
+  color: #c62828; 
+}
+
+/* ── Try It On button ── */
+.vt-tryon-btn {
+  width: 100%; 
+  margin-top: 14px; 
+  padding: 14px;
+  background: #1a1a1a; 
+  color: #fff; 
+  border: none;
+  font-size: 13px; 
+  letter-spacing: 2px; 
+  text-transform: uppercase;
+  cursor: pointer; 
+  font-family: Arial, sans-serif;
+}
+
+.vt-tryon-btn:disabled { 
+  background: #ccc; 
+  cursor: not-allowed; 
+}
