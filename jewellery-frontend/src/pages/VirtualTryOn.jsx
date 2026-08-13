@@ -28,11 +28,29 @@ function VirtualTryOn() {
 
   // ── Load MediaPipe models once on mount ──
   useEffect(() => {
+    // Load a script from CDN and return a promise
+    const loadScript = (src) => new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return }
+      const script = document.createElement('script')
+      script.src = src
+      script.crossOrigin = 'anonymous'
+      script.onload = resolve
+      script.onerror = reject
+      document.head.appendChild(script)
+    })
+
     const loadModels = async () => {
       try {
         setModelsLoading(true)
-        const { FaceMesh } = await import('@mediapipe/face_mesh')
-        const { Holistic } = await import('@mediapipe/holistic')
+
+        // Load MediaPipe from CDN scripts (npm dynamic import does not work in browser)
+        await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js')
+        await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js')
+        await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js')
+        await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js')
+
+        const FaceMesh = window.FaceMesh
+        const Holistic = window.Holistic
 
         const faceMesh = new FaceMesh({
           locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
