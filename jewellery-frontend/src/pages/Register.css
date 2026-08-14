@@ -301,3 +301,60 @@
     letter-spacing: 6px;
   }
 }
+
+/* ── OTP verification ── */
+.otp-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.otp-box {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1a1a1a;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.otp-box:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  border-width: 1.5px;
+}
+
+.otp-success-box {
+  background: #e8f5e9;
+  border: 1px solid #2e7d32;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.otp-success-box p {
+  color: #2e7d32;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.resend-disabled {
+  color: #aaa;
+}
+
+@media (max-width: 480px) {
+  .otp-box {
+    width: 42px;
+    height: 50px;
+    font-size: 20px;
+  }
+  .otp-inputs {
+    gap: 6px;
+  }
+}

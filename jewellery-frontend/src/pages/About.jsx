@@ -2,8 +2,8 @@ import './About.css'
 
 const team = [
   { name: 'Eric Owusu', role: 'Lead Developer' },
-  { name: 'Kofi Asante', role: 'UI/UX Designer' },
-  { name: 'Ama Mensah', role: 'Backend Developer' },
+  { name: 'Uthman Memuna', role: 'UI/UX Designer' },
+  { name: 'Chris Addo', role: 'Backend Developer' },
 ]
 
 const getInitials = (name) => name.split(' ').map(n => n[0]).join('').toUpperCase()

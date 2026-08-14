@@ -20,6 +20,9 @@ API.interceptors.request.use((config) => {
 
 // AUTH
 export const registerUser = (data) => API.post('/auth/register', data)
+export const verifyOtp = (data) => API.post('/auth/verify-otp', data)
+export const resendOtp = (data) => API.post('/auth/resend-otp', data)
+export const registerUser = (data) => API.post('/auth/register', data)
 export const loginUser = (data) => API.post('/auth/login', data)
 export const getUserProfile = () => API.get('/auth/profile')
 export const getWishlist = () => API.get('/auth/wishlist')
