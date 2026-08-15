@@ -258,7 +258,7 @@ function Register() {
         </div>
 
         <button className="register-btn" onClick={handleSubmit} disabled={loading}>
-          {loading ? 'Sending Code...' : 'Create Account'}
+          {loading ? 'Creating Account...' : 'Create Account'}
         </button>
 
         <p className="signin-link">
