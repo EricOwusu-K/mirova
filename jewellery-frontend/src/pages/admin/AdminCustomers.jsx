@@ -11,7 +11,7 @@ function AdminCustomers() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const res = await fetch('https://mirova-backend.onrender.com/api/auth/users', {
+        const res = await fetch('https://mirova-backend-production.up.railway.app/api/auth/users', {
           headers: { Authorization: `Bearer ${token}` },
         })
         const data = await res.json()

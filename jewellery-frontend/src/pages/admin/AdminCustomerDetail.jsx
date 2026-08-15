@@ -14,10 +14,10 @@ function AdminCustomerDetail() {
     const fetchData = async () => {
       try {
         const [usersRes, ordersRes] = await Promise.all([
-          fetch('https://mirova-backend.onrender.com/api/auth/users', {
+          fetch('https://mirova-backend-production.up.railway.app/api/auth/users', {
             headers: { Authorization: `Bearer ${token}` },
           }).then(r => r.json()),
-          fetch('https://mirova-backend.onrender.com/api/orders', {
+          fetch('https://mirova-backend-production.up.railway.app/api/orders', {
             headers: { Authorization: `Bearer ${token}` },
           }).then(r => r.json()),
         ])

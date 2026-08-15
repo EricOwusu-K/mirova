@@ -16,7 +16,7 @@ function OrderDetail() {
     const fetchOrder = async () => {
       try {
         const token = JSON.parse(localStorage.getItem('mirovaUser'))?.token
-        const res = await fetch(`https://mirova-backend.onrender.com/api/orders/${orderId}`, {
+        const res = await fetch(`https://mirova-backend-production.up.railway.app/api/orders/${orderId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const data = await res.json()

@@ -11,7 +11,7 @@ function AdminHelpRequests() {
 
   const fetchRequests = async () => {
     try {
-      const res = await fetch('https://mirova-backend.onrender.com/api/help', {
+      const res = await fetch('https://mirova-backend-production.up.railway.app/api/help', {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -27,7 +27,7 @@ function AdminHelpRequests() {
 
   const updateStatus = async (id, status) => {
     try {
-      await fetch(`https://mirova-backend.onrender.com/api/help/${id}`, {
+      await fetch(`https://mirova-backend-production.up.railway.app/api/help/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status }),

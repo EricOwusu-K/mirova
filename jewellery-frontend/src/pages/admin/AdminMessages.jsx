@@ -18,7 +18,7 @@ function AdminMessages() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('https://mirova-backend.onrender.com/api/auth/users', {
+      const res = await fetch('https://mirova-backend-production.up.railway.app/api/auth/users', {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -30,7 +30,7 @@ function AdminMessages() {
 
   const fetchSentMessages = async () => {
     try {
-      const res = await fetch('https://mirova-backend.onrender.com/api/messages', {
+      const res = await fetch('https://mirova-backend-production.up.railway.app/api/messages', {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -59,7 +59,7 @@ function AdminMessages() {
     }
     setSending(true)
     try {
-      const res = await fetch('https://mirova-backend.onrender.com/api/messages', {
+      const res = await fetch('https://mirova-backend-production.up.railway.app/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({

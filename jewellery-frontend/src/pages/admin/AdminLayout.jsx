@@ -12,7 +12,7 @@ function AdminLayout({ children, currentPage }) {
   useEffect(() => {
     const fetchOpenRequests = async () => {
       try {
-        const res = await fetch('https://mirova-backend.onrender.com/api/help', {
+        const res = await fetch('https://mirova-backend-production.up.railway.app/api/help', {
           headers: { Authorization: `Bearer ${token}` },
         })
         const data = await res.json()
