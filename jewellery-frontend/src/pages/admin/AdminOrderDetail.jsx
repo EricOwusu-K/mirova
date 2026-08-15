@@ -15,7 +15,7 @@ function AdminOrderDetail() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await fetch(`https://mirova-backend-production.up.railway.app/api/orders/${orderId}`, {
+        const res = await fetch(`https://mirova-backend.onrender.com/api/orders/${orderId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const data = await res.json()
@@ -33,7 +33,7 @@ function AdminOrderDetail() {
   const handleUpdateStatus = async () => {
     setUpdating(true)
     try {
-      await fetch(`https://mirova-backend-production.up.railway.app/api/orders/${orderId}/status`, {
+      await fetch(`https://mirova-backend.onrender.com/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: selectedStatus }),

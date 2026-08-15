@@ -61,7 +61,7 @@ function Help() {
     try {
       setLoading(true)
       const token = JSON.parse(localStorage.getItem('mirovaUser'))?.token
-      const res = await fetch('https://mirova-backend-production.up.railway.app/api/help', {
+      const res = await fetch('https://mirova-backend.onrender.com/api/help', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

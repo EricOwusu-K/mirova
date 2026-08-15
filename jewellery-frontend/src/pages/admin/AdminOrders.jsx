@@ -12,7 +12,7 @@ function AdminOrders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('https://mirova-backend-production.up.railway.app/api/orders', {
+      const res = await fetch('https://mirova-backend.onrender.com/api/orders', {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -29,7 +29,7 @@ function AdminOrders() {
   const updateStatus = async (orderId, status) => {
     setUpdating(orderId)
     try {
-      await fetch(`https://mirova-backend-production.up.railway.app/api/orders/${orderId}/status`, {
+      await fetch(`https://mirova-backend.onrender.com/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status }),

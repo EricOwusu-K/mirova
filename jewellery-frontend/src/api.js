@@ -6,7 +6,7 @@ const API = axios.create({
 })
 */
 const API = axios.create({
-  baseURL: 'https://mirova-backend-production.up.railway.app/api',
+  baseURL: 'https://mirova-backend.onrender.com/api',
 })
 
 // Automatically attach token to every request if user is logged in

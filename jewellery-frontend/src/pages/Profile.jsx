@@ -62,7 +62,7 @@ function Profile() {
       }
       if (formData.password) payload.password = formData.password
 
-      const res = await fetch('https://mirova-backend-production.up.railway.app/api/auth/profile', {
+      const res = await fetch('https://mirova-backend.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
