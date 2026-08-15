@@ -58,11 +58,9 @@ function Register() {
     try {
       setLoading(true)
       const { data } = await registerUser(formData)
-      // Registration now returns needsVerification instead of logging in
-      if (data.needsVerification) {
-        setStep('otp')
-        setResendCooldown(60)
-      }
+      login(data)              // log them in immediately with the token
+      setStep('otp')           // show OTP screen for optional verification
+      setResendCooldown(60)
     } catch (error) {
       setServerError(error.response?.data?.message || 'Registration failed. Please try again.')
     } finally {
@@ -109,7 +107,7 @@ function Register() {
     try {
       setOtpLoading(true)
       const { data } = await verifyOtp({ email: formData.email, otp: code })
-      login(data)  // logs the user in with the returned token
+      login(data)  // update stored user with verified status
       window.location.href = '/'
     } catch (error) {
       setOtpError(error.response?.data?.message || 'Verification failed. Please try again.')
@@ -189,6 +187,10 @@ function Register() {
             ) : (
               <a onClick={handleResend} style={{ cursor: 'pointer' }}>Resend code</a>
             )}
+          </p>
+
+          <p className="signin-link">
+            <a onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>Skip for now</a>
           </p>
 
           <p className="signin-link">

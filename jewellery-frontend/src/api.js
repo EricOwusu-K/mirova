@@ -26,6 +26,8 @@ export const loginUser = (data) => API.post('/auth/login', data)
 export const getUserProfile = () => API.get('/auth/profile')
 export const getWishlist = () => API.get('/auth/wishlist')
 export const toggleWishlist = (productId) => API.post(`/auth/wishlist/${productId}`)
+export const forgotPassword = (data) => API.post('/auth/forgot-password', data)
+export const resetPassword = (data) => API.post('/auth/reset-password', data)
 
 // PRODUCTS
 export const getProducts = (params) => API.get('/products', { params })

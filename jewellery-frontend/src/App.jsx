@@ -24,6 +24,7 @@ import Recommended from './pages/Recommended'
 import OrderDetail from './pages/OrderDetail'
 import Profile from './pages/Profile'
 import { useAuth } from './context/AuthContext'
+import ForgotPassword from './pages/ForgotPassword'
 
 function AdminRoute({ children }) {
   const { user } = useAuth()
@@ -61,6 +62,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/help" element={<Help />} />
               <Route path="/about" element={<About />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
             <Footer />
           </>
