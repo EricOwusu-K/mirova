@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import './VirtualTryOn.css'
-import { getProducts } from '../api'
+import { getProducts, prepareTryOn } from '../api'
 
 const JEWELRY_CATEGORIES = ['Earrings', 'Necklaces', 'Sunglasses', 'Bracelets', 'Watches']
 
@@ -24,6 +24,8 @@ function VirtualTryOn() {
   const [cameraError, setCameraError] = useState('')
   // null | 'checking' | 'met' | 'failed'
   const [detectionStatus, setDetectionStatus] = useState(null)
+  const [tryOnImage, setTryOnImage] = useState(null)
+  const [preparing, setPreparing] = useState(false)
 
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -107,6 +109,17 @@ function VirtualTryOn() {
           if (preSelected) {
             setSelectedProduct(preSelected)
             setActiveCategory(preSelected.category)
+            // Prepare the transparent try-on image
+            setPreparing(true)
+            try {
+              const res = await prepareTryOn(preSelected._id)
+              setTryOnImage(res.data.tryOnImage)
+            } catch (err) {
+              console.error('Could not prepare try-on image:', err)
+              setTryOnImage(preSelected.images[0])
+            } finally {
+              setPreparing(false)
+            }
             return
           }
         }
@@ -123,11 +136,23 @@ function VirtualTryOn() {
     setSelectedProduct(null)
     setResultImage(null)
     setDetectionStatus(null)
+    setTryOnImage(null)
   }
 
-  const handleSelectProduct = (product) => {
+  const handleSelectProduct = async (product) => {
     setSelectedProduct(product)
     setResultImage(null)
+    setTryOnImage(null)
+    setPreparing(true)
+    try {
+      const { data } = await prepareTryOn(product._id)
+      setTryOnImage(data.tryOnImage)
+    } catch (err) {
+      console.error('Could not prepare try-on image:', err)
+      setTryOnImage(product.images[0])  // fallback to original
+    } finally {
+      setPreparing(false)
+    }
     // If a photo is already present, re-check detection for the new target
     if (uploadedPhoto) {
       runDetection(uploadedPhoto, product)
@@ -138,6 +163,7 @@ function VirtualTryOn() {
     setSelectedProduct(null)
     setResultImage(null)
     setDetectionStatus(null)
+    setTryOnImage(null)
   }
 
   // ── Camera ──
@@ -261,12 +287,12 @@ function VirtualTryOn() {
   }, [modelsLoaded])
 
   // ── Draw jewellery ──
-const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
-  ctx.save()
-  ctx.globalCompositeOperation = 'multiply'
-  ctx.drawImage(jewelryImg, x, y, width, height)
-  ctx.restore()
-}
+  const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
+    ctx.save()
+    ctx.globalCompositeOperation = 'multiply'
+    ctx.drawImage(jewelryImg, x, y, width, height)
+    ctx.restore()
+  }
 
   // ── Main Try-On processor (renders the overlay) ──
   const processTryOn = useCallback(async () => {
@@ -287,7 +313,7 @@ const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
 
       const jewelryImg = new Image()
       jewelryImg.crossOrigin = 'anonymous'
-      jewelryImg.src = selectedProduct.images[0]
+      jewelryImg.src = tryOnImage || selectedProduct.images[0]
       await new Promise((resolve, reject) => { jewelryImg.onload = resolve; jewelryImg.onerror = reject })
 
       const category = selectedProduct.category
@@ -331,7 +357,7 @@ const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
               drawJewelry(ctx, jewelryImg, leftEar.x - earSize / 2, leftEar.y, earSize, eH)
               drawJewelry(ctx, jewelryImg, rightEar.x - earSize / 2, rightEar.y, earSize, eH)
 
-           } else if (category === 'Necklaces') {
+            } else if (category === 'Necklaces') {
               const chin = lm(152)
               const leftJaw = lm(234)
               const rightJaw = lm(454)
@@ -339,7 +365,8 @@ const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
               const nW = jawWidth * 1.3
               const nH = nW * (jewelryImg.height / jewelryImg.width)
               drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH)
-            }else if (category === 'Sunglasses') {
+
+            } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
               const rightEye = lm(263)
               const eyeWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
@@ -361,7 +388,7 @@ const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
     } finally {
       setProcessing(false)
     }
-  }, [uploadedPhoto, selectedProduct, modelsLoaded, detectionStatus])
+  }, [uploadedPhoto, selectedProduct, modelsLoaded, detectionStatus, tryOnImage])
 
   const filteredProducts = products.filter(p => p.category === activeCategory && p.images?.length > 0)
   const targetLabel = selectedProduct
@@ -549,9 +576,9 @@ const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
                 <button
                   className="vt-tryon-btn"
                   onClick={processTryOn}
-                  disabled={detectionStatus !== 'met' || processing}
+                  disabled={detectionStatus !== 'met' || processing || preparing || !tryOnImage}
                 >
-                  {processing ? 'Processing...' : 'Try It On ✦'}
+                  {preparing ? 'Preparing item...' : processing ? 'Processing...' : 'Try It On ✦'}
                 </button>
               )}
             </div>

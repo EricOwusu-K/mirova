@@ -35,6 +35,7 @@ export const getProductById = (id) => API.get(`/products/${id}`)
 export const getFeaturedProducts = () => API.get('/products/featured')
 export const getNewArrivals = () => API.get('/products/new-arrivals')
 export const logInteraction = (id, type) => API.post(`/products/${id}/interact`, { type })
+export const prepareTryOn = (productId) => API.post(`/products/${productId}/prepare-tryon`)
 
 // CART
 export const getCart = () => API.get('/cart')
