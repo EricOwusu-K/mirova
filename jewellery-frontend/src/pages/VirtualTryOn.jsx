@@ -260,12 +260,32 @@ function VirtualTryOn() {
     }
   }, [modelsLoaded])
 
-  const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
-    ctx.save()
-    ctx.globalCompositeOperation = 'multiply'
-    ctx.drawImage(jewelryImg, x, y, width, height)
-    ctx.restore()
-  }
+  // ── Draw jewellery (original, unchanged) ──
+const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
+  ctx.save()
+  ctx.globalCompositeOperation = 'multiply'
+  ctx.drawImage(jewelryImg, x, y, width, height)
+  ctx.restore()
+}
+
+// ── Draw jewellery WITH a soft drop shadow (grounds it on the skin) ──
+const drawJewelryWithShadow = (ctx, jewelryImg, x, y, width, height) => {
+  // Pass 1: soft shadow underneath
+  ctx.save()
+  ctx.globalAlpha = 0.35
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
+  ctx.shadowBlur = 12
+  ctx.shadowOffsetX = 0
+  ctx.shadowOffsetY = 6
+  ctx.drawImage(jewelryImg, x, y, width, height)
+  ctx.restore()
+
+  // Pass 2: the actual jewellery with multiply blend
+  ctx.save()
+  ctx.globalCompositeOperation = 'multiply'
+  ctx.drawImage(jewelryImg, x, y, width, height)
+  ctx.restore()
+}
 
   // ── Main Try-On processor (renders the overlay) ──
   const processTryOn = useCallback(async () => {
@@ -335,9 +355,17 @@ function VirtualTryOn() {
               const leftJaw = lm(234)
               const rightJaw = lm(454)
               const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
-              const nW = jawWidth * 1.3
+
+              // Wider so it drapes across the collarbone, not just the neck
+              const nW = jawWidth * 1.9
               const nH = nW * (jewelryImg.height / jewelryImg.width)
-              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH)
+
+              // Sit lower — drape onto the chest/collarbone area below the neck
+              const dropDistance = jawWidth * 0.75
+              const nx = chin.x - nW / 2
+              const ny = chin.y + dropDistance
+
+              drawJewelryWithShadow(ctx, jewelryImg, nx, ny, nW, nH)
 
             } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
