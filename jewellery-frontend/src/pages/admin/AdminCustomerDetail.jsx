@@ -47,7 +47,7 @@ function AdminCustomerDetail() {
     const map = {
       pending: 'cd-status-pending',
       processing: 'cd-status-processing',
-      shipped: 'cd-status-shipped',
+      Sent: 'cd-status-Sent',
       delivered: 'cd-status-delivered',
       cancelled: 'cd-status-cancelled',
     }

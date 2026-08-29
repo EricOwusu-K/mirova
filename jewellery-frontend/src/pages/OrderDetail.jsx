@@ -34,7 +34,7 @@ function OrderDetail() {
     const map = {
       pending: 'od-status-pending',
       processing: 'od-status-processing',
-      shipped: 'od-status-shipped',
+      Sent: 'od-status-Sent',
       delivered: 'od-status-delivered',
       cancelled: 'od-status-cancelled',
     }

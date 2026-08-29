@@ -146,7 +146,7 @@
 
 .cd-status-pending { background: #fff8e1; color: #f57f17; }
 .cd-status-processing { background: #e3f2fd; color: #1565c0; }
-.cd-status-shipped { background: #f3e5f5; color: #6a1b9a; }
+.cd-status-Sent { background: #f3e5f5; color: #6a1b9a; }
 .cd-status-delivered { background: #e8f5e9; color: #2e7d32; }
 .cd-status-cancelled { background: #ffebee; color: #c62828; }
 
