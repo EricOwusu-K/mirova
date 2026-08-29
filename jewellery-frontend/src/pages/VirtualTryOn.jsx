@@ -260,27 +260,8 @@ function VirtualTryOn() {
     }
   }, [modelsLoaded])
 
-  // ── Draw jewellery (original, unchanged) ──
+  // ── Draw jewellery ──
 const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
-  ctx.save()
-  ctx.globalCompositeOperation = 'multiply'
-  ctx.drawImage(jewelryImg, x, y, width, height)
-  ctx.restore()
-}
-
-// ── Draw jewellery WITH a soft drop shadow (grounds it on the skin) ──
-const drawJewelryWithShadow = (ctx, jewelryImg, x, y, width, height) => {
-  // Pass 1: soft shadow underneath
-  ctx.save()
-  ctx.globalAlpha = 0.35
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
-  ctx.shadowBlur = 12
-  ctx.shadowOffsetX = 0
-  ctx.shadowOffsetY = 6
-  ctx.drawImage(jewelryImg, x, y, width, height)
-  ctx.restore()
-
-  // Pass 2: the actual jewellery with multiply blend
   ctx.save()
   ctx.globalCompositeOperation = 'multiply'
   ctx.drawImage(jewelryImg, x, y, width, height)
@@ -350,23 +331,15 @@ const drawJewelryWithShadow = (ctx, jewelryImg, x, y, width, height) => {
               drawJewelry(ctx, jewelryImg, leftEar.x - earSize / 2, leftEar.y, earSize, eH)
               drawJewelry(ctx, jewelryImg, rightEar.x - earSize / 2, rightEar.y, earSize, eH)
 
-            } else if (category === 'Necklaces') {
-            const chin = lm(152)
-            const leftJaw = lm(234)
-            const rightJaw = lm(454)
-            const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
-
-            // Back close to original width — just slightly wider
-            const nW = jawWidth * 1.4
-            const nH = nW * (jewelryImg.height / jewelryImg.width)
-
-            // Sit just below the neck — small drop, not down the chest
-            const dropDistance = jawWidth * 0.15
-            const nx = chin.x - nW / 2
-            const ny = chin.y + dropDistance
-
-            drawJewelryWithShadow(ctx, jewelryImg, nx, ny, nW, nH)
-          } else if (category === 'Sunglasses') {
+           } else if (category === 'Necklaces') {
+              const chin = lm(152)
+              const leftJaw = lm(234)
+              const rightJaw = lm(454)
+              const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
+              const nW = jawWidth * 1.3
+              const nH = nW * (jewelryImg.height / jewelryImg.width)
+              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH)
+            }else if (category === 'Sunglasses') {
               const leftEye = lm(33)
               const rightEye = lm(263)
               const eyeWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
