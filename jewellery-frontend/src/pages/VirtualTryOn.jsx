@@ -351,23 +351,22 @@ const drawJewelryWithShadow = (ctx, jewelryImg, x, y, width, height) => {
               drawJewelry(ctx, jewelryImg, rightEar.x - earSize / 2, rightEar.y, earSize, eH)
 
             } else if (category === 'Necklaces') {
-              const chin = lm(152)
-              const leftJaw = lm(234)
-              const rightJaw = lm(454)
-              const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
+            const chin = lm(152)
+            const leftJaw = lm(234)
+            const rightJaw = lm(454)
+            const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
 
-              // Wider so it drapes across the collarbone, not just the neck
-              const nW = jawWidth * 1.9
-              const nH = nW * (jewelryImg.height / jewelryImg.width)
+            // Back close to original width — just slightly wider
+            const nW = jawWidth * 1.4
+            const nH = nW * (jewelryImg.height / jewelryImg.width)
 
-              // Sit lower — drape onto the chest/collarbone area below the neck
-              const dropDistance = jawWidth * 0.75
-              const nx = chin.x - nW / 2
-              const ny = chin.y + dropDistance
+            // Sit just below the neck — small drop, not down the chest
+            const dropDistance = jawWidth * 0.15
+            const nx = chin.x - nW / 2
+            const ny = chin.y + dropDistance
 
-              drawJewelryWithShadow(ctx, jewelryImg, nx, ny, nW, nH)
-
-            } else if (category === 'Sunglasses') {
+            drawJewelryWithShadow(ctx, jewelryImg, nx, ny, nW, nH)
+          } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
               const rightEye = lm(263)
               const eyeWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
