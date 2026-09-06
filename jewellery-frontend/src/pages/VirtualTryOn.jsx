@@ -32,7 +32,7 @@ function VirtualTryOn() {
   const resultCanvasRef = useRef(null)
   const fileInputRef = useRef(null)
   const faceMeshRef = useRef(null)
-  const holisticRef = useRef(null)
+  const handsRef = useRef(null)
   const streamRef = useRef(null)
 
   // ── Load MediaPipe models once on mount ──
@@ -53,11 +53,12 @@ function VirtualTryOn() {
         await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js')
         await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js')
         await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js')
-        await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js')
+        await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js')
 
         const FaceMesh = window.FaceMesh
-        const Holistic = window.Holistic
+        const Hands = window.Hands
 
+        // Face model (earrings, necklaces, sunglasses)
         const faceMesh = new FaceMesh({
           locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
         })
@@ -70,17 +71,18 @@ function VirtualTryOn() {
         await faceMesh.initialize()
         faceMeshRef.current = faceMesh
 
-        const holistic = new Holistic({
-          locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`
+        // Hands model (bracelets, watches) — reliable for close-up wrist shots
+        const hands = new Hands({
+          locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
         })
-        holistic.setOptions({
+        hands.setOptions({
+          maxNumHands: 1,
           modelComplexity: 1,
-          smoothLandmarks: true,
           minDetectionConfidence: 0.5,
           minTrackingConfidence: 0.5,
         })
-        await holistic.initialize()
-        holisticRef.current = holistic
+        await hands.initialize()
+        handsRef.current = hands
 
         setModelsLoaded(true)
         setModelsLoading(false)
@@ -101,7 +103,6 @@ function VirtualTryOn() {
         const { data } = await getProducts()
         setProducts(data)
 
-        // Flow 1: product passed via URL → pre-select it
         const params = new URLSearchParams(window.location.search)
         const productId = params.get('product')
         if (productId) {
@@ -109,7 +110,6 @@ function VirtualTryOn() {
           if (preSelected) {
             setSelectedProduct(preSelected)
             setActiveCategory(preSelected.category)
-            // Prepare the transparent try-on image
             setPreparing(true)
             try {
               const res = await prepareTryOn(preSelected._id)
@@ -123,7 +123,6 @@ function VirtualTryOn() {
             return
           }
         }
-        // Flow 2: no product in URL → leave nothing selected (user must pick)
       } catch (err) {
         console.error('Failed to fetch products:', err)
       }
@@ -149,11 +148,10 @@ function VirtualTryOn() {
       setTryOnImage(data.tryOnImage)
     } catch (err) {
       console.error('Could not prepare try-on image:', err)
-      setTryOnImage(product.images[0])  // fallback to original
+      setTryOnImage(product.images[0])
     } finally {
       setPreparing(false)
     }
-    // If a photo is already present, re-check detection for the new target
     if (uploadedPhoto) {
       runDetection(uploadedPhoto, product)
     }
@@ -257,18 +255,14 @@ function VirtualTryOn() {
       const target = CATEGORY_TARGET[product.category] || 'face'
 
       if (target === 'wrist') {
+        // Use MediaPipe Hands — reliable for close-up wrist/hand photos
         await new Promise((resolve) => {
-          holisticRef.current.onResults((results) => {
-            const lms = results.poseLandmarks
-            const leftWrist = lms?.[15]
-            const rightWrist = lms?.[16]
-            const detected =
-              (leftWrist && leftWrist.visibility > 0.15) ||
-              (rightWrist && rightWrist.visibility > 0.15)
+          handsRef.current.onResults((results) => {
+            const detected = results.multiHandLandmarks && results.multiHandLandmarks.length > 0
             setDetectionStatus(detected ? 'met' : 'failed')
             resolve()
           })
-          holisticRef.current.send({ image: img })
+          handsRef.current.send({ image: img })
         })
       } else {
         await new Promise((resolve) => {
@@ -291,7 +285,6 @@ function VirtualTryOn() {
     ctx.save()
     ctx.globalCompositeOperation = 'multiply'
     if (angle !== 0) {
-      // Rotate around the centre of where the item is drawn
       const cx = x + width / 2
       const cy = y + height / 2
       ctx.translate(cx, cy)
@@ -329,47 +322,39 @@ function VirtualTryOn() {
       const W = canvas.width
       const H = canvas.height
 
-            if (category === 'Bracelets' || category === 'Watches') {
+      if (category === 'Bracelets' || category === 'Watches') {
+        // ── Wrist overlay using MediaPipe Hands ──
         await new Promise((resolve) => {
-          holisticRef.current.onResults((results) => {
-            if (results.poseLandmarks) {
-              const lms = results.poseLandmarks
+          handsRef.current.onResults((results) => {
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+              const hand = results.multiHandLandmarks[0]
+              // Landmark 0 = wrist, 9 = middle-finger base (for angle + scale)
+              const wristPt = { x: hand[0].x * W, y: hand[0].y * H }
+              const midPt = { x: hand[9].x * W, y: hand[9].y * H }
 
-              // Left wrist (15) with left elbow (13), right wrist (16) with right elbow (14)
-              const pairs = [
-                { wrist: lms[15], elbow: lms[13] },
-                { wrist: lms[16], elbow: lms[14] },
-              ]
+              // Size based on hand span
+              const handSpan = Math.hypot(midPt.x - wristPt.x, midPt.y - wristPt.y)
+              const wSize = handSpan * 1.6
+              const wH = wSize * (jewelryImg.height / jewelryImg.width)
 
-              pairs.forEach(({ wrist, elbow }) => {
-                if (wrist && wrist.visibility > 0.15) {
-                  const wx = wrist.x * W
-                  const wy = wrist.y * H
-                  const wSize = W * 0.18
-                  const wH = wSize * (jewelryImg.height / jewelryImg.width)
+              // Angle: wrist → middle-finger-base direction, so it wraps along the arm
+              const wristAngle = Math.atan2(midPt.y - wristPt.y, midPt.x - wristPt.x) - Math.PI / 2
 
-                  // Angle of the forearm (elbow → wrist), so the item aligns with the arm
-                  let wristAngle = 0
-                  if (elbow && elbow.visibility > 0.15) {
-                    wristAngle = Math.atan2((wrist.y - elbow.y) * H, (wrist.x - elbow.x) * W) - Math.PI / 2
-                  }
-
-                  drawJewelry(ctx, jewelryImg, wx - wSize / 2, wy - wH / 2, wSize, wH, wristAngle)
-                }
-              })
+              drawJewelry(ctx, jewelryImg, wristPt.x - wSize / 2, wristPt.y - wH / 2, wSize, wH, wristAngle)
             }
             resolve()
           })
-          holisticRef.current.send({ image: img })
+          handsRef.current.send({ image: img })
         })
       } else {
+        // ── Face overlay using FaceMesh ──
         await new Promise((resolve) => {
           faceMeshRef.current.onResults((results) => {
             if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) {
               resolve()
               return
             }
-                        const landmarks = results.multiFaceLandmarks[0]
+            const landmarks = results.multiFaceLandmarks[0]
             const lm = (i) => ({ x: landmarks[i].x * W, y: landmarks[i].y * H })
 
             // Head tilt angle from the two eye corners
@@ -392,7 +377,8 @@ function VirtualTryOn() {
               const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
               const nW = jawWidth * 1.3
               const nH = nW * (jewelryImg.height / jewelryImg.width)
-              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH, faceAngle)
+              // Reduced rotation for necklaces so they hang more naturally
+              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH, faceAngle * 0.3)
 
             } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
@@ -480,7 +466,6 @@ function VirtualTryOn() {
                 </div>
               </div>
             ) : (
-              // ── Confirmed green bar ──
               <div className="vt-step-card vt-step-confirmed">
                 <div className="vt-confirm-check">✓</div>
                 <div className="vt-confirm-info">
@@ -510,7 +495,6 @@ function VirtualTryOn() {
                 </div>
               </div>
 
-              {/* Photo viewer — same box as before */}
               <div className={`vt-viewer ${selectedProduct ? '' : 'vt-viewer-locked'}`}>
                 <div className="vt-corner tl" />
                 <div className="vt-corner tr" />
@@ -559,7 +543,6 @@ function VirtualTryOn() {
 
               {cameraError && <p className="vt-error-text">{cameraError}</p>}
 
-              {/* Controls — only usable when product selected */}
               {selectedProduct && (
                 <div className="vt-controls">
                   <button className="vt-ctrl-btn" onClick={enableCamera}>Front Camera</button>
@@ -570,7 +553,6 @@ function VirtualTryOn() {
                 </div>
               )}
 
-              {/* Detection feedback */}
               {detectionStatus === 'checking' && (
                 <div className="vt-detect vt-detect-checking">
                   Checking your photo...
@@ -593,13 +575,12 @@ function VirtualTryOn() {
                   </p>
                   <p className="vt-detect-sub">
                     {CATEGORY_TARGET[selectedProduct?.category] === 'wrist'
-                      ? 'Please show your wrist clearly against a plain background, then retake.'
+                      ? 'Please show your wrist and hand clearly against a plain background, then retake.'
                       : 'Please use a clear, front-facing, well-lit photo, then retake.'}
                   </p>
                 </div>
               )}
 
-              {/* Try It On button */}
               {captured && (
                 <button
                   className="vt-tryon-btn"
@@ -612,7 +593,7 @@ function VirtualTryOn() {
             </div>
           </div>
 
-          {/* ══ RIGHT COLUMN — unchanged content, reordered steps ══ */}
+          {/* ══ RIGHT COLUMN ══ */}
           <div className="vt-right">
             <p className="panel-title">How It Works</p>
             <div className="vt-steps">
@@ -627,7 +608,7 @@ function VirtualTryOn() {
                 <div className="step-num">2</div>
                 <div className="step-info">
                   <p className="step-name">Take or upload a photo</p>
-                  <p className="step-desc">Use your camera or upload a portrait. For bracelets, show your wrist clearly.</p>
+                  <p className="step-desc">Use your camera or upload a portrait. For bracelets, show your wrist and hand clearly.</p>
                 </div>
               </div>
               <div className="step-item">
@@ -652,7 +633,7 @@ function VirtualTryOn() {
               <p className="tip-title">Tips for best results</p>
               <p className="tip-text">
                 Face jewellery: use good lighting and face the camera directly.
-                Bracelets and watches: hold your wrist up against a plain background.
+                Bracelets and watches: show your wrist and hand together against a plain background.
                 Use PNG product images with transparent backgrounds for best overlay results.
               </p>
             </div>
