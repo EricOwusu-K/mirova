@@ -263,8 +263,8 @@ function VirtualTryOn() {
             const leftWrist = lms?.[15]
             const rightWrist = lms?.[16]
             const detected =
-              (leftWrist && leftWrist.visibility > 0.4) ||
-              (rightWrist && rightWrist.visibility > 0.4)
+              (leftWrist && leftWrist.visibility > 0.15) ||
+              (rightWrist && rightWrist.visibility > 0.15)
             setDetectionStatus(detected ? 'met' : 'failed')
             resolve()
           })
@@ -342,7 +342,7 @@ function VirtualTryOn() {
               ]
 
               pairs.forEach(({ wrist, elbow }) => {
-                if (wrist && wrist.visibility > 0.4) {
+                if (wrist && wrist.visibility > 0.15) {
                   const wx = wrist.x * W
                   const wy = wrist.y * H
                   const wSize = W * 0.18
@@ -350,7 +350,7 @@ function VirtualTryOn() {
 
                   // Angle of the forearm (elbow → wrist), so the item aligns with the arm
                   let wristAngle = 0
-                  if (elbow && elbow.visibility > 0.4) {
+                  if (elbow && elbow.visibility > 0.15) {
                     wristAngle = Math.atan2((wrist.y - elbow.y) * H, (wrist.x - elbow.x) * W) - Math.PI / 2
                   }
 
