@@ -286,11 +286,20 @@ function VirtualTryOn() {
     }
   }, [modelsLoaded])
 
-  // ── Draw jewellery ──
-  const drawJewelry = (ctx, jewelryImg, x, y, width, height) => {
+  // ── Draw jewellery (with optional rotation) ──
+  const drawJewelry = (ctx, jewelryImg, x, y, width, height, angle = 0) => {
     ctx.save()
     ctx.globalCompositeOperation = 'multiply'
-    ctx.drawImage(jewelryImg, x, y, width, height)
+    if (angle !== 0) {
+      // Rotate around the centre of where the item is drawn
+      const cx = x + width / 2
+      const cy = y + height / 2
+      ctx.translate(cx, cy)
+      ctx.rotate(angle)
+      ctx.drawImage(jewelryImg, -width / 2, -height / 2, width, height)
+    } else {
+      ctx.drawImage(jewelryImg, x, y, width, height)
+    }
     ctx.restore()
   }
 
@@ -320,18 +329,32 @@ function VirtualTryOn() {
       const W = canvas.width
       const H = canvas.height
 
-      if (category === 'Bracelets' || category === 'Watches') {
+            if (category === 'Bracelets' || category === 'Watches') {
         await new Promise((resolve) => {
           holisticRef.current.onResults((results) => {
             if (results.poseLandmarks) {
               const lms = results.poseLandmarks
-              ;[lms[15], lms[16]].forEach(wrist => {
+
+              // Left wrist (15) with left elbow (13), right wrist (16) with right elbow (14)
+              const pairs = [
+                { wrist: lms[15], elbow: lms[13] },
+                { wrist: lms[16], elbow: lms[14] },
+              ]
+
+              pairs.forEach(({ wrist, elbow }) => {
                 if (wrist && wrist.visibility > 0.4) {
                   const wx = wrist.x * W
                   const wy = wrist.y * H
                   const wSize = W * 0.18
                   const wH = wSize * (jewelryImg.height / jewelryImg.width)
-                  drawJewelry(ctx, jewelryImg, wx - wSize / 2, wy - wH / 2, wSize, wH)
+
+                  // Angle of the forearm (elbow → wrist), so the item aligns with the arm
+                  let wristAngle = 0
+                  if (elbow && elbow.visibility > 0.4) {
+                    wristAngle = Math.atan2((wrist.y - elbow.y) * H, (wrist.x - elbow.x) * W) - Math.PI / 2
+                  }
+
+                  drawJewelry(ctx, jewelryImg, wx - wSize / 2, wy - wH / 2, wSize, wH, wristAngle)
                 }
               })
             }
@@ -346,16 +369,21 @@ function VirtualTryOn() {
               resolve()
               return
             }
-            const landmarks = results.multiFaceLandmarks[0]
+                        const landmarks = results.multiFaceLandmarks[0]
             const lm = (i) => ({ x: landmarks[i].x * W, y: landmarks[i].y * H })
+
+            // Head tilt angle from the two eye corners
+            const leftEyePt = lm(33)
+            const rightEyePt = lm(263)
+            const faceAngle = Math.atan2(rightEyePt.y - leftEyePt.y, rightEyePt.x - leftEyePt.x)
 
             if (category === 'Earrings') {
               const leftEar = lm(234)
               const rightEar = lm(454)
               const earSize = W * 0.09
               const eH = earSize * (jewelryImg.height / jewelryImg.width)
-              drawJewelry(ctx, jewelryImg, leftEar.x - earSize / 2, leftEar.y, earSize, eH)
-              drawJewelry(ctx, jewelryImg, rightEar.x - earSize / 2, rightEar.y, earSize, eH)
+              drawJewelry(ctx, jewelryImg, leftEar.x - earSize / 2, leftEar.y, earSize, eH, faceAngle)
+              drawJewelry(ctx, jewelryImg, rightEar.x - earSize / 2, rightEar.y, earSize, eH, faceAngle)
 
             } else if (category === 'Necklaces') {
               const chin = lm(152)
@@ -364,7 +392,7 @@ function VirtualTryOn() {
               const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
               const nW = jawWidth * 1.3
               const nH = nW * (jewelryImg.height / jewelryImg.width)
-              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH)
+              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH, faceAngle)
 
             } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
@@ -374,7 +402,7 @@ function VirtualTryOn() {
               const sH = sW * (jewelryImg.height / jewelryImg.width)
               const cx = (leftEye.x + rightEye.x) / 2
               const cy = (leftEye.y + rightEye.y) / 2
-              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2, sW, sH)
+              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2, sW, sH, faceAngle)
             }
             resolve()
           })
