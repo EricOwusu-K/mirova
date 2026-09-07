@@ -366,14 +366,49 @@ function VirtualTryOn() {
             const rightEyePt = lm(263)
             const faceAngle = Math.atan2(rightEyePt.y - leftEyePt.y, rightEyePt.x - leftEyePt.x)
 
-            if (category === 'Earrings') {
+                        if (category === 'Earrings') {
+              const noseTip = lm(1)
               const leftEar = lm(234)
               const rightEar = lm(454)
-              const earSize = W * 0.09
-              const eH = earSize * (jewelryImg.height / jewelryImg.width)
-              drawJewelry(ctx, jewelryImg, leftEar.x - earSize / 2, leftEar.y, earSize, eH, faceAngle)
-              drawJewelry(ctx, jewelryImg, rightEar.x - earSize / 2, rightEar.y, earSize, eH, faceAngle)
+              const forehead = lm(10)
+              const chinPt = lm(152)
 
+              // Face height — used for face-relative sizing
+              const faceHeight = Math.hypot(chinPt.x - forehead.x, chinPt.y - forehead.y)
+
+              // Size the earring relative to the FACE, not the image width
+              const earSize = faceHeight * 0.23
+              const eH = earSize * (jewelryImg.height / jewelryImg.width)
+
+              // Lobe sits slightly below the ear landmark
+              const lobeDrop = faceHeight * 0.077
+
+              // ── Head orientation: compare nose distance to each ear ──
+              const dLeft = Math.abs(noseTip.x - leftEar.x)
+              const dRight = Math.abs(noseTip.x - rightEar.x)
+              const ratio = Math.min(dLeft, dRight) / Math.max(dLeft, dRight)
+
+              // Below this ratio, the head is turned enough that one ear is hidden
+              const TURN_THRESHOLD = 0.55
+
+              const drawEarring = (ear) => {
+                // Anchor the TOP of the earring at the lobe so it hangs downward
+                drawJewelry(
+                  ctx, jewelryImg,
+                  ear.x - earSize / 2,
+                  ear.y + lobeDrop,
+                  earSize, eH, faceAngle
+                )
+              }
+
+              if (ratio >= TURN_THRESHOLD) {
+                // Facing forward — both ears visible
+                drawEarring(leftEar)
+                drawEarring(rightEar)
+              } else {
+                // Head turned — only draw the ear that is further from the nose (the visible one)
+                drawEarring(dLeft > dRight ? leftEar : rightEar)
+              }
             } else if (category === 'Necklaces') {
               const chin = lm(152)
               const leftJaw = lm(234)
