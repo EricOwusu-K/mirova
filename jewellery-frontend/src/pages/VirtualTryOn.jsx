@@ -321,25 +321,30 @@ function VirtualTryOn() {
       const W = canvas.width
       const H = canvas.height
 
-      if (category === 'Bracelets' || category === 'Watches') {
-        // ── Wrist overlay using MediaPipe Hands ──
+            if (category === 'Bracelets' || category === 'Watches') {
         await new Promise((resolve) => {
           handsRef.current.onResults((results) => {
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
               const hand = results.multiHandLandmarks[0]
-              // Landmark 0 = wrist, 9 = middle-finger base (for angle + scale)
               const wristPt = { x: hand[0].x * W, y: hand[0].y * H }
               const midPt = { x: hand[9].x * W, y: hand[9].y * H }
 
-              // Size based on hand span
               const handSpan = Math.hypot(midPt.x - wristPt.x, midPt.y - wristPt.y)
-              const wSize = handSpan * 1.6
+              const wSize = handSpan * 0.73        // was 1.6 — sized to actual wrist width
               const wH = wSize * (jewelryImg.height / jewelryImg.width)
 
-              // Angle: wrist → middle-finger-base direction, so it wraps along the arm
+              // Direction from hand back toward the forearm
+              const dirX = (wristPt.x - midPt.x) / handSpan
+              const dirY = (wristPt.y - midPt.y) / handSpan
+
+              // Shift down the forearm so it sits on the wrist, not the hand
+              const shift = handSpan * 0.20
+              const cx = wristPt.x + dirX * shift
+              const cy = wristPt.y + dirY * shift
+
               const wristAngle = Math.atan2(midPt.y - wristPt.y, midPt.x - wristPt.x) - Math.PI / 2
 
-              drawJewelry(ctx, jewelryImg, wristPt.x - wSize / 2, wristPt.y - wH / 2, wSize, wH, wristAngle)
+              drawJewelry(ctx, jewelryImg, cx - wSize / 2, cy - wH / 2, wSize, wH, wristAngle)
             }
             resolve()
           })
