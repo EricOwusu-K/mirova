@@ -283,7 +283,6 @@ function VirtualTryOn() {
   // ── Draw jewellery (with optional rotation) ──
   const drawJewelry = (ctx, jewelryImg, x, y, width, height, angle = 0) => {
     ctx.save()
-    ctx.globalCompositeOperation = 'multiply'
     if (angle !== 0) {
       const cx = x + width / 2
       const cy = y + height / 2
