@@ -479,15 +479,29 @@ function VirtualTryOn() {
                 drawEarring(leftEar)
               }
             } else if (category === 'Necklaces') {
-              const chin = lm(152)
-              const leftJaw = lm(234)
-              const rightJaw = lm(454)
-              const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
-              const nW = jawWidth * 0.85
-              const nH = nW * (jewelryImg.height / jewelryImg.width)
-              // Proportional offset — scales with face size instead of a fixed 15px
-              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + jawWidth * -0.1, nW, nH, faceAngle * 0.3)
+              const leftEar = lm(234)
+              const rightEar = lm(454)
+              const forehead = lm(10)
+              const chinPt = lm(152)
 
+              // Face height as the scale reference
+              const faceHeight = Math.hypot(chinPt.x - forehead.x, chinPt.y - forehead.y)
+              const jawWidth = Math.hypot(rightEar.x - leftEar.x, rightEar.y - leftEar.y)
+
+              // ── Derive a stable neck anchor from the ear midpoint ──
+              // The ears sit near the head's rotation axis, so they stay put
+              // when the head tilts — unlike the chin, which swings widely.
+              const earMidX = (leftEar.x + rightEar.x) / 2
+              const earMidY = (leftEar.y + rightEar.y) / 2
+
+              // Project downward to the neck base
+              const neckX = earMidX
+              const neckY = earMidY + faceHeight * 0.55
+
+              const nW = jawWidth * 0.98
+              const nH = nW * (jewelryImg.height / jewelryImg.width)
+
+              drawJewelry(ctx, jewelryImg, neckX - nW / 2, neckY, nW, nH, faceAngle * 0.3)
 
             } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
