@@ -2,12 +2,12 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import './VirtualTryOn.css'
 import { getProducts, prepareTryOn } from '../api'
 
-const JEWELRY_CATEGORIES = ['Earrings', 'Necklaces', 'Sunglasses', 'Bracelets', 'Watches']
+const JEWELRY_CATEGORIES = ['Earrings', 'Necklaces', 'Sunglasses', 'Bracelets', 'Watches', 'Rings']
 
 // Which body part each category needs
 const CATEGORY_TARGET = {
   Earrings: 'face', Necklaces: 'face', Sunglasses: 'face',
-  Bracelets: 'wrist', Watches: 'wrist',
+  Bracelets: 'wrist', Watches: 'wrist', Rings: 'wrist',
 }
 
 function VirtualTryOn() {
@@ -326,6 +326,32 @@ function VirtualTryOn() {
           handsRef.current.onResults((results) => {
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
               const hand = results.multiHandLandmarks[0]
+
+                if (category === 'Rings') {
+                  // ── RING: sits on the proximal phalanx of the ring finger ──
+                  const ringMCP = { x: hand[13].x * W, y: hand[13].y * H }  // knuckle
+                  const ringPIP = { x: hand[14].x * W, y: hand[14].y * H }  // first joint
+                  const middleMCP = { x: hand[9].x * W, y: hand[9].y * H }
+                  const pinkyMCP = { x: hand[17].x * W, y: hand[17].y * H }
+
+                  // Finger width derived from knuckle spacing
+                  const knuckleSpan = Math.hypot(pinkyMCP.x - middleMCP.x, pinkyMCP.y - middleMCP.y)
+                  const rW = knuckleSpan * 0.62
+                  const rH = rW * (jewelryImg.height / jewelryImg.width)
+
+                  // Sit 38% along the segment from knuckle toward the first joint
+                  const t = 0.38
+                  const rx = ringMCP.x + (ringPIP.x - ringMCP.x) * t
+                  const ry = ringMCP.y + (ringPIP.y - ringMCP.y) * t
+
+                  // Rotate to wrap around the finger direction
+                  const ringAngle = Math.atan2(ringPIP.y - ringMCP.y, ringPIP.x - ringMCP.x) - Math.PI / 2
+
+                  drawJewelry(ctx, jewelryImg, rx - rW / 2, ry - rH / 2, rW, rH, ringAngle)
+
+                }
+
+                // ── BRACELET / WATCH: sits on the wrist ──
               const wristPt = { x: hand[0].x * W, y: hand[0].y * H }
               const midPt = { x: hand[9].x * W, y: hand[9].y * H }
 
