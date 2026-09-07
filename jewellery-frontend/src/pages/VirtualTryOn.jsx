@@ -483,7 +483,7 @@ function VirtualTryOn() {
               const leftJaw = lm(234)
               const rightJaw = lm(454)
               const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
-              const nW = jawWidth * 1.3
+              const nW = jawWidth * 0.98
               const nH = nW * (jewelryImg.height / jewelryImg.width)
               // Proportional offset — scales with face size instead of a fixed 15px
               drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + jawWidth * 0.10, nW, nH, faceAngle * 0.3)
@@ -495,7 +495,7 @@ function VirtualTryOn() {
               const sH = sW * (jewelryImg.height / jewelryImg.width)
               const cx = (leftEye.x + rightEye.x) / 2
               const cy = (leftEye.y + rightEye.y) / 2
-              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * 0.10, sW, sH, faceAngle)
+              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * 0.03, sW, sH, faceAngle)
             }
             resolve()
           })
