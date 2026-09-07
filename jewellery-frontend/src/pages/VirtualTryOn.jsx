@@ -327,8 +327,8 @@ function VirtualTryOn() {
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
               const hand = results.multiHandLandmarks[0]
 
-                                if (category === 'Rings') {
-                // ── RING: middle finger, perspective-aware, edge-corrected ──
+                               if (category === 'Rings') {
+                // ── RING: middle finger, perspective-aware, centre-corrected ──
                 const ringMCP = { x: hand[9].x * W, y: hand[9].y * H }
                 const ringPIP = { x: hand[10].x * W, y: hand[10].y * H }
                 const indexMCP = { x: hand[5].x * W, y: hand[5].y * H }
@@ -336,7 +336,7 @@ function VirtualTryOn() {
                 const pinkyMCP = { x: hand[17].x * W, y: hand[17].y * H }
 
                 const knuckleSpan = Math.hypot(pinkyMCP.x - indexMCP.x, pinkyMCP.y - indexMCP.y)
-                const rW = knuckleSpan * 0.36
+                const rW = knuckleSpan * 0.46
                 let rH = rW * (jewelryImg.height / jewelryImg.width)
 
                 // Perspective squash along the finger axis
@@ -345,7 +345,8 @@ function VirtualTryOn() {
                 const squash = Math.max(0.35, Math.min(1.0, segLen / expectedSeg))
                 rH = rH * squash
 
-                // Correct the centre using neighbouring knuckles
+                // ── Correct the centre using neighbouring knuckles ──
+                // Landmarks drift off the visual finger centre when the hand is angled
                 const neighbourMidX = (indexMCP.x + ringFingerMCP.x) / 2
                 const neighbourMidY = (indexMCP.y + ringFingerMCP.y) / 2
                 const centreMCP = {
@@ -353,17 +354,12 @@ function VirtualTryOn() {
                   y: (neighbourMidY + ringMCP.y) / 2,
                 }
 
+                // Sit a little higher up the phalanx
                 const t = 0.48
-                let rx = centreMCP.x + (ringPIP.x - centreMCP.x) * t
-                let ry = centreMCP.y + (ringPIP.y - centreMCP.y) * t
+                const rx = centreMCP.x + (ringPIP.x - centreMCP.x) * t
+                const ry = centreMCP.y + (ringPIP.y - centreMCP.y) * t
 
                 const ringAngle = Math.atan2(ringPIP.y - ringMCP.y, ringPIP.x - ringMCP.x) - Math.PI / 2
-
-                // Nudge sideways (perpendicular to the finger) to close the gap
-                const perpX = Math.cos(ringAngle)
-                const perpY = Math.sin(ringAngle)
-                rx += perpX * rW * 0.09
-                ry += perpY * rW * 0.09
 
                 drawJewelry(ctx, jewelryImg, rx - rW / 2, ry - rH / 2, rW, rH, ringAngle)
               }
