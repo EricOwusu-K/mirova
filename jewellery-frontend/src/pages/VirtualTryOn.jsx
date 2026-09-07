@@ -321,7 +321,7 @@ function VirtualTryOn() {
       const W = canvas.width
       const H = canvas.height
 
-            if (category === 'Bracelets' || category === 'Watches') {
+            if (category === 'Bracelets' || category === 'Watches' || category === 'Rings') {
         await new Promise((resolve) => {
           handsRef.current.onResults((results) => {
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
@@ -392,7 +392,7 @@ function VirtualTryOn() {
             const rightEyePt = lm(263)
             const faceAngle = Math.atan2(rightEyePt.y - leftEyePt.y, rightEyePt.x - leftEyePt.x)
 
-                                    if (category === 'Earrings') {
+            if (category === 'Earrings') {
               const noseTip = lm(1)
               const leftEar = lm(234)
               const rightEar = lm(454)
