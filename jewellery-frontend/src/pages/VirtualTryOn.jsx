@@ -374,11 +374,10 @@ function VirtualTryOn() {
               const leftJaw = lm(234)
               const rightJaw = lm(454)
               const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
-              const nW = jawWidth * 0.9
+              const nW = jawWidth * 1.3
               const nH = nW * (jewelryImg.height / jewelryImg.width)
-              // Reduced rotation for necklaces so they hang more naturally
-              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH, faceAngle * 0.3)
-
+              // Proportional offset — scales with face size instead of a fixed 15px
+              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + jawWidth * 0.10, nW, nH, faceAngle * 0.3)
             } else if (category === 'Sunglasses') {
               const leftEye = lm(33)
               const rightEye = lm(263)
