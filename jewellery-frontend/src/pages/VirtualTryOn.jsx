@@ -280,18 +280,46 @@ function VirtualTryOn() {
     }
   }, [modelsLoaded])
 
-  // ── Draw jewellery (with optional rotation) ──
+   // ── Draw jewellery with realistic blending ──
   const drawJewelry = (ctx, jewelryImg, x, y, width, height, angle = 0) => {
-    ctx.save()
-    if (angle !== 0) {
-      const cx = x + width / 2
-      const cy = y + height / 2
-      ctx.translate(cx, cy)
-      ctx.rotate(angle)
-      ctx.drawImage(jewelryImg, -width / 2, -height / 2, width, height)
-    } else {
-      ctx.drawImage(jewelryImg, x, y, width, height)
+    const cx = x + width / 2
+    const cy = y + height / 2
+
+    // Sample the photo's brightness behind the jewellery for tone matching
+    let avgBrightness = 128
+    try {
+      const sample = ctx.getImageData(
+        Math.max(0, Math.round(cx - 5)),
+        Math.max(0, Math.round(cy - 5)),
+        10, 10
+      )
+      let total = 0
+      for (let i = 0; i < sample.data.length; i += 4) {
+        total += (sample.data[i] + sample.data[i + 1] + sample.data[i + 2]) / 3
+      }
+      avgBrightness = total / (sample.data.length / 4)
+    } catch (e) {
+      // getImageData can fail on tainted canvases — fall back to neutral
     }
+
+    // ── Pass 1: contact shadow (grounds the item on the skin) ──
+    ctx.save()
+    ctx.globalAlpha = 0.28
+    ctx.filter = 'blur(4px) brightness(0)'
+    ctx.translate(cx, cy + height * 0.03)
+    if (angle !== 0) ctx.rotate(angle)
+    ctx.drawImage(jewelryImg, -width / 2, -height / 2, width, height)
+    ctx.restore()
+
+    // ── Pass 2: the jewellery itself, tone-matched and slightly soft ──
+    ctx.save()
+    // Match the scene's exposure: darker photos dim the item slightly
+    const exposure = Math.max(0.82, Math.min(1.12, avgBrightness / 140))
+    ctx.filter = `brightness(${exposure.toFixed(2)}) blur(0.4px)`
+    ctx.globalAlpha = 0.95
+    ctx.translate(cx, cy)
+    if (angle !== 0) ctx.rotate(angle)
+    ctx.drawImage(jewelryImg, -width / 2, -height / 2, width, height)
     ctx.restore()
   }
 
