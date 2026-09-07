@@ -327,21 +327,37 @@ function VirtualTryOn() {
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
               const hand = results.multiHandLandmarks[0]
 
-                  if (category === 'Rings') {
-                // ── RING: sits on the proximal phalanx of the middle finger ──
-                const ringMCP = { x: hand[9].x * W, y: hand[9].y * H }   // middle finger knuckle
-                const ringPIP = { x: hand[10].x * W, y: hand[10].y * H } // middle finger first joint
+                               if (category === 'Rings') {
+                // ── RING: middle finger, perspective-aware, centre-corrected ──
+                const ringMCP = { x: hand[9].x * W, y: hand[9].y * H }
+                const ringPIP = { x: hand[10].x * W, y: hand[10].y * H }
                 const indexMCP = { x: hand[5].x * W, y: hand[5].y * H }
+                const ringFingerMCP = { x: hand[13].x * W, y: hand[13].y * H }
                 const pinkyMCP = { x: hand[17].x * W, y: hand[17].y * H }
 
-                // Finger width derived from knuckle spacing (index to pinky = 3 gaps)
                 const knuckleSpan = Math.hypot(pinkyMCP.x - indexMCP.x, pinkyMCP.y - indexMCP.y)
                 const rW = knuckleSpan * 0.46
-                const rH = rW * (jewelryImg.height / jewelryImg.width)
+                let rH = rW * (jewelryImg.height / jewelryImg.width)
 
-                const t = 0.38
-                const rx = ringMCP.x + (ringPIP.x - ringMCP.x) * t
-                const ry = ringMCP.y + (ringPIP.y - ringMCP.y) * t
+                // Perspective squash along the finger axis
+                const segLen = Math.hypot(ringPIP.x - ringMCP.x, ringPIP.y - ringMCP.y)
+                const expectedSeg = knuckleSpan * 0.30
+                const squash = Math.max(0.35, Math.min(1.0, segLen / expectedSeg))
+                rH = rH * squash
+
+                // ── Correct the centre using neighbouring knuckles ──
+                // Landmarks drift off the visual finger centre when the hand is angled
+                const neighbourMidX = (indexMCP.x + ringFingerMCP.x) / 2
+                const neighbourMidY = (indexMCP.y + ringFingerMCP.y) / 2
+                const centreMCP = {
+                  x: (neighbourMidX + ringMCP.x) / 2,
+                  y: (neighbourMidY + ringMCP.y) / 2,
+                }
+
+                // Sit a little higher up the phalanx
+                const t = 0.48
+                const rx = centreMCP.x + (ringPIP.x - centreMCP.x) * t
+                const ry = centreMCP.y + (ringPIP.y - centreMCP.y) * t
 
                 const ringAngle = Math.atan2(ringPIP.y - ringMCP.y, ringPIP.x - ringMCP.x) - Math.PI / 2
 
