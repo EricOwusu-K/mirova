@@ -327,30 +327,27 @@ function VirtualTryOn() {
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
               const hand = results.multiHandLandmarks[0]
 
-                if (category === 'Rings') {
-                  // ── RING: sits on the proximal phalanx of the ring finger ──
-                  const ringMCP = { x: hand[13].x * W, y: hand[13].y * H }  // knuckle
-                  const ringPIP = { x: hand[14].x * W, y: hand[14].y * H }  // first joint
-                  const middleMCP = { x: hand[9].x * W, y: hand[9].y * H }
-                  const pinkyMCP = { x: hand[17].x * W, y: hand[17].y * H }
+                  if (category === 'Rings') {
+                // ── RING: sits on the proximal phalanx of the middle finger ──
+                const ringMCP = { x: hand[9].x * W, y: hand[9].y * H }   // middle finger knuckle
+                const ringPIP = { x: hand[10].x * W, y: hand[10].y * H } // middle finger first joint
+                const indexMCP = { x: hand[5].x * W, y: hand[5].y * H }
+                const pinkyMCP = { x: hand[17].x * W, y: hand[17].y * H }
 
-                  // Finger width derived from knuckle spacing
-                  const knuckleSpan = Math.hypot(pinkyMCP.x - middleMCP.x, pinkyMCP.y - middleMCP.y)
-                  const rW = knuckleSpan * 0.62
-                  const rH = rW * (jewelryImg.height / jewelryImg.width)
+                // Finger width derived from knuckle spacing (index to pinky = 3 gaps)
+                const knuckleSpan = Math.hypot(pinkyMCP.x - indexMCP.x, pinkyMCP.y - indexMCP.y)
+                const rW = knuckleSpan * 0.33
+                const rH = rW * (jewelryImg.height / jewelryImg.width)
 
-                  // Sit 38% along the segment from knuckle toward the first joint
-                  const t = 0.38
-                  const rx = ringMCP.x + (ringPIP.x - ringMCP.x) * t
-                  const ry = ringMCP.y + (ringPIP.y - ringMCP.y) * t
+                const t = 0.38
+                const rx = ringMCP.x + (ringPIP.x - ringMCP.x) * t
+                const ry = ringMCP.y + (ringPIP.y - ringMCP.y) * t
 
-                  // Rotate to wrap around the finger direction
-                  const ringAngle = Math.atan2(ringPIP.y - ringMCP.y, ringPIP.x - ringMCP.x) - Math.PI / 2
+                const ringAngle = Math.atan2(ringPIP.y - ringMCP.y, ringPIP.x - ringMCP.x) - Math.PI / 2
 
-                  drawJewelry(ctx, jewelryImg, rx - rW / 2, ry - rH / 2, rW, rH, ringAngle)
-
-                }
-
+                drawJewelry(ctx, jewelryImg, rx - rW / 2, ry - rH / 2, rW, rH, ringAngle)
+              }
+                  else {
                 // ── BRACELET / WATCH: sits on the wrist ──
               const wristPt = { x: hand[0].x * W, y: hand[0].y * H }
               const midPt = { x: hand[9].x * W, y: hand[9].y * H }
@@ -372,6 +369,7 @@ function VirtualTryOn() {
 
               drawJewelry(ctx, jewelryImg, cx - wSize / 2, cy - wH / 2, wSize, wH, wristAngle)
             }
+          }
             resolve()
           })
           handsRef.current.send({ image: img })
