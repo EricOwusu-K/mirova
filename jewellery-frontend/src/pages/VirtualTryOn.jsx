@@ -383,11 +383,11 @@ function VirtualTryOn() {
               const leftEye = lm(33)
               const rightEye = lm(263)
               const eyeWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
-              const sW = eyeWidth * 2.2
+              const sW = eyeWidth * 1.9
               const sH = sW * (jewelryImg.height / jewelryImg.width)
               const cx = (leftEye.x + rightEye.x) / 2
               const cy = (leftEye.y + rightEye.y) / 2
-              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * 0.08, sW, sH, faceAngle)
+              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * 0.10, sW, sH, faceAngle)
             }
             resolve()
           })
