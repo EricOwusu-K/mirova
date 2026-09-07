@@ -495,7 +495,7 @@ function VirtualTryOn() {
               const sH = sW * (jewelryImg.height / jewelryImg.width)
               const cx = (leftEye.x + rightEye.x) / 2
               const cy = (leftEye.y + rightEye.y) / 2
-              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * -0.03, sW, sH, faceAngle)
+              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * -0.2, sW, sH, faceAngle)
             }
             resolve()
           })
