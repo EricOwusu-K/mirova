@@ -486,7 +486,7 @@ function VirtualTryOn() {
               const nW = jawWidth * 0.85
               const nH = nW * (jewelryImg.height / jewelryImg.width)
               // Proportional offset — scales with face size instead of a fixed 15px
-              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + jawWidth * -0.7, nW, nH, faceAngle * 0.3)
+              drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + jawWidth * -0.1, nW, nH, faceAngle * 0.3)
 
 
             } else if (category === 'Sunglasses') {
