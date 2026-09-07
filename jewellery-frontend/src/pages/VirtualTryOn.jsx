@@ -336,7 +336,7 @@ function VirtualTryOn() {
 
                 // Finger width derived from knuckle spacing (index to pinky = 3 gaps)
                 const knuckleSpan = Math.hypot(pinkyMCP.x - indexMCP.x, pinkyMCP.y - indexMCP.y)
-                const rW = knuckleSpan * 0.33
+                const rW = knuckleSpan * 0.46
                 const rH = rW * (jewelryImg.height / jewelryImg.width)
 
                 const t = 0.38
