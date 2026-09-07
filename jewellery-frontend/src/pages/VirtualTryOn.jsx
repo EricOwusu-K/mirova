@@ -330,7 +330,7 @@ function VirtualTryOn() {
               const midPt = { x: hand[9].x * W, y: hand[9].y * H }
 
               const handSpan = Math.hypot(midPt.x - wristPt.x, midPt.y - wristPt.y)
-              const wSize = handSpan * 1.07        // was 1.6 — sized to actual wrist width
+              const wSize = handSpan * 1.10        // was 1.6 — sized to actual wrist width
               const wH = wSize * (jewelryImg.height / jewelryImg.width)
 
               // Direction from hand back toward the forearm
