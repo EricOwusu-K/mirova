@@ -366,33 +366,31 @@ function VirtualTryOn() {
             const rightEyePt = lm(263)
             const faceAngle = Math.atan2(rightEyePt.y - leftEyePt.y, rightEyePt.x - leftEyePt.x)
 
-                        if (category === 'Earrings') {
+                                    if (category === 'Earrings') {
               const noseTip = lm(1)
               const leftEar = lm(234)
               const rightEar = lm(454)
               const forehead = lm(10)
               const chinPt = lm(152)
 
-              // Face height — used for face-relative sizing
               const faceHeight = Math.hypot(chinPt.x - forehead.x, chinPt.y - forehead.y)
 
-              // Size the earring relative to the FACE, not the image width
-              const earSize = faceHeight * 0.23
-              const eH = earSize * (jewelryImg.height / jewelryImg.width)
+              // Size by HEIGHT so tall earrings don't blow up
+              const eH = faceHeight * 0.25
+              const earSize = eH * (jewelryImg.width / jewelryImg.height)
 
               // Lobe sits slightly below the ear landmark
               const lobeDrop = faceHeight * 0.077
 
-              // ── Head orientation: compare nose distance to each ear ──
-              const dLeft = Math.abs(noseTip.x - leftEar.x)
-              const dRight = Math.abs(noseTip.x - rightEar.x)
-              const ratio = Math.min(dLeft, dRight) / Math.max(dLeft, dRight)
+              // ── Head orientation: nose offset from the ear midpoint ──
+              const earMidX = (leftEar.x + rightEar.x) / 2
+              const earSpan = Math.abs(rightEar.x - leftEar.x)
+              const noseOffset = (noseTip.x - earMidX) / (earSpan || 1)
 
-              // Below this ratio, the head is turned enough that one ear is hidden
-              const TURN_THRESHOLD = 0.55
+              // |offset| beyond this means the head is turned enough to hide an ear
+              const TURN_THRESHOLD = 0.15
 
               const drawEarring = (ear) => {
-                // Anchor the TOP of the earring at the lobe so it hangs downward
                 drawJewelry(
                   ctx, jewelryImg,
                   ear.x - earSize / 2,
@@ -401,13 +399,16 @@ function VirtualTryOn() {
                 )
               }
 
-              if (ratio >= TURN_THRESHOLD) {
+              if (Math.abs(noseOffset) < TURN_THRESHOLD) {
                 // Facing forward — both ears visible
                 drawEarring(leftEar)
                 drawEarring(rightEar)
+              } else if (noseOffset < 0) {
+                // Nose left of centre -> left ear hidden -> draw right only
+                drawEarring(rightEar)
               } else {
-                // Head turned — only draw the ear that is further from the nose (the visible one)
-                drawEarring(dLeft > dRight ? leftEar : rightEar)
+                // Nose right of centre -> right ear hidden -> draw left only
+                drawEarring(leftEar)
               }
             } else if (category === 'Necklaces') {
               const chin = lm(152)
