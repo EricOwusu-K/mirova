@@ -374,7 +374,7 @@ function VirtualTryOn() {
               const leftJaw = lm(234)
               const rightJaw = lm(454)
               const jawWidth = Math.hypot(rightJaw.x - leftJaw.x, rightJaw.y - leftJaw.y)
-              const nW = jawWidth * 1.3
+              const nW = jawWidth * 0.9
               const nH = nW * (jewelryImg.height / jewelryImg.width)
               // Reduced rotation for necklaces so they hang more naturally
               drawJewelry(ctx, jewelryImg, chin.x - nW / 2, chin.y + 15, nW, nH, faceAngle * 0.3)
@@ -383,11 +383,11 @@ function VirtualTryOn() {
               const leftEye = lm(33)
               const rightEye = lm(263)
               const eyeWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
-              const sW = eyeWidth * 2.6
+              const sW = eyeWidth * 2.2
               const sH = sW * (jewelryImg.height / jewelryImg.width)
               const cx = (leftEye.x + rightEye.x) / 2
               const cy = (leftEye.y + rightEye.y) / 2
-              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2, sW, sH, faceAngle)
+              drawJewelry(ctx, jewelryImg, cx - sW / 2, cy - sH / 2 + sH * 0.08, sW, sH, faceAngle)
             }
             resolve()
           })
