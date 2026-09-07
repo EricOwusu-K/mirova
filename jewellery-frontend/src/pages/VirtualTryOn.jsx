@@ -493,7 +493,7 @@ function VirtualTryOn() {
               const leftEye = lm(33)
               const rightEye = lm(263)
               const eyeWidth = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
-              const sW = eyeWidth * 1.9
+              const sW = eyeWidth * 1.7
               const sH = sW * (jewelryImg.height / jewelryImg.width)
               const cx = (leftEye.x + rightEye.x) / 2
               const cy = (leftEye.y + rightEye.y) / 2
